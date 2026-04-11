@@ -1,0 +1,52 @@
+#info-carousel-container {
+    height: 450px;
+}
+
+.info-carousel-item {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.5s ease-in-out;
+}
+
+/* Animation Control */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fadeIn {
+    animation: fadeIn 1s ease-out forwards;
+    opacity: 0;
+    /* Hidden by default */
+}
+
+.animate-slideUp {
+    animation: slideUp 0.8s ease-out forwards;
+    opacity: 0;
+    /* Hidden by default */
+}
+
+/* Optional delay utility */
+.delay-100 {
+    animation-delay: 0.1s;
+}

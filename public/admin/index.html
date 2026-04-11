@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100">
+
+    <main class="fade-in">
+        <div class="flex items-center justify-between mb-8">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800 tracking-tight">Xush Kelibsiz!</h1>
+                <p class="text-gray-500 mt-1">Quva Politexnikumi boshqaruv paneliga xush kelibsiz.</p>
+            </div>
+            <div
+                class="text-sm font-medium text-gray-500 bg-white px-4 py-2 rounded-lg shadow-sm border border-gray-100 flex items-center">
+                <svg class="w-4 h-4 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                    </path>
+                </svg>
+                Bugun: <span id="current-date" class="ml-1 text-gray-700"></span>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
+            <!-- News Stat -->
+            <div
+                class="relative bg-white p-6 rounded-2xl shadow-sm border border-gray-100 overflow-hidden group hover:shadow-md transition-shadow">
+                <div
+                    class="absolute right-0 top-0 w-24 h-24 bg-gradient-to-br from-blue-50 to-blue-100/50 rounded-bl-full -z-10 transition-transform group-hover:scale-110">
+                </div>
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-1">Yangiliklar</p>
+                        <h3 id="stat-news" class="text-4xl font-bold text-gray-800">-</h3>
+                    </div>
+                    <div class="p-3 bg-blue-50 text-blue-600 rounded-xl shadow-inner">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5a2.5 2.5 0 00-2.5-2.5H15">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+                <div class="mt-4 flex items-center text-sm font-medium text-green-600">
+                    <a href="news.html" class="flex items-center text-blue-600 hover:text-blue-700">
+                        Boshqarish <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
+                            </path>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Fields Stat -->
+            <div
+                class="relative bg-white p-6 rounded-2xl shadow-sm border border-gray-100 overflow-hidden group hover:shadow-md transition-shadow">
+                <div
+                    class="absolute right-0 top-0 w-24 h-24 bg-gradient-to-br from-indigo-50 to-indigo-100/50 rounded-bl-full -z-10 transition-transform group-hover:scale-110">
+                </div>
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-1">Yo'nalishlar</p>
+                        <h3 id="stat-fields" class="text-4xl font-bold text-gray-800">-</h3>
+                    </div>
+                    <div class="p-3 bg-indigo-50 text-indigo-600 rounded-xl shadow-inner">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+                <div class="mt-4 flex items-center text-sm font-medium text-green-600">
+                    <a href="fields.html" class="flex items-center text-indigo-600 hover:text-indigo-700">
+                        Boshqarish <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
+                            </path>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Students Stat -->
+            <div
+                class="relative bg-white p-6 rounded-2xl shadow-sm border border-gray-100 overflow-hidden group hover:shadow-md transition-shadow">
+                <div
+                    class="absolute right-0 top-0 w-24 h-24 bg-gradient-to-br from-emerald-50 to-emerald-100/50 rounded-bl-full -z-10 transition-transform group-hover:scale-110">
+                </div>
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-1">O'quvchilar</p>
+                        <h3 id="stat-students" class="text-4xl font-bold text-gray-800">-</h3>
+                    </div>
+                    <div class="p-3 bg-emerald-50 text-emerald-600 rounded-xl shadow-inner">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 14l9-5-9-5-9 5 9 5z"></path>
+                            <path
+                                d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+                <div class="mt-4 flex items-center text-sm font-medium text-green-600">
+                    <a href="students.html" class="flex items-center text-emerald-600 hover:text-emerald-700">
+                        Boshqarish <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
+                            </path>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Apps Stat -->
+            <div
+                class="relative bg-white p-6 rounded-2xl shadow-sm border border-gray-100 overflow-hidden group hover:shadow-md transition-shadow">
+                <div
+                    class="absolute right-0 top-0 w-24 h-24 bg-gradient-to-br from-purple-50 to-purple-100/50 rounded-bl-full -z-10 transition-transform group-hover:scale-110">
+                </div>
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-1">Arizalar</p>
+                        <h3 id="stat-apps" class="text-4xl font-bold text-gray-800">-</h3>
+                    </div>
+                    <div class="p-3 bg-purple-50 text-purple-600 rounded-xl shadow-inner">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+                <div class="mt-4 flex items-center text-sm font-medium">
+                    <a href="applications.html" class="flex items-center text-purple-600 hover:text-purple-700">
+                        Boshqarish <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
+                            </path>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div
+            class="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-2xl p-8 text-white shadow-lg relative overflow-hidden">
+            <div
+                class="absolute right-0 top-0 w-64 h-64 bg-white opacity-5 rounded-full -mr-16 -mt-16 transform scale-150">
+            </div>
+            <div
+                class="absolute right-32 bottom-0 w-32 h-32 bg-indigo-400 opacity-20 rounded-full mb-8 transform scale-150">
+            </div>
+            <div class="relative z-10">
+                <h2 class="text-2xl font-bold mb-2">Tizim holati</h2>
+                <p class="text-blue-100 max-w-xl mb-6">Saytning barcha dinamik ma'lumotlarini ushbu panel orqali
+                    to'g'ridan-to'g'ri boshqarishingiz mumkin. O'zgarishlar darhol asosiy veb-saytda aks etadi.</p>
+                <div class="flex space-x-4">
+                    <a href="/" target="_blank"
+                        class="bg-white text-blue-700 font-semibold px-6 py-2.5 rounded-lg hover:bg-gray-50 transition-colors shadow-sm">Saytni
+                        ko'rish</a>
+                    <a href="settings.html"
+                        class="bg-blue-500/30 hover:bg-blue-500/40 text-white font-medium px-6 py-2.5 rounded-lg transition-colors border border-blue-400/30 backdrop-blur-sm">Sozlamalar</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/admin.js"></script>
+    <script>
+        // Simple stats fetcher
+        async function loadStats() {
+            try {
+                // We can just fetch lists and count them for now since we don't have a dedicated dashboard stats endpoint
+                const [news, fields, students, apps] = await Promise.all([
+                    fetch('http://localhost:3000/api/news').then(r => r.json()),
+                    fetch('http://localhost:3000/api/fields').then(r => r.json()),
+                    fetch('http://localhost:3000/api/students').then(r => r.json()),
+                    admin.fetch('/applications').then(r => r ? r.json() : [])
+                ]);
+
+                document.getElementById('stat-news').textContent = news.count || news.length || 0;
+                document.getElementById('stat-fields').textContent = fields.length || 0;
+                document.getElementById('stat-students').textContent = students.length || 0;
+                document.getElementById('stat-apps').textContent = apps.length || 0;
+
+            } catch (e) { console.error(e); }
+        }
+        loadStats();
+    </script>
+</body>
+
+</html>

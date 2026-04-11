@@ -1,0 +1,696 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quva tumani Politexnikomi - Bosh sahifa</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+
+</head>
+
+<body class="bg-white dark:bg-gray-900">
+    <header>
+        <nav
+            class="fixed top-0 left-0 right-0 bg-blue-900/80 backdrop-blur-md dark:bg-gray-800/80 p-6 z-30 transition-all duration-300">
+            <div class="container mx-auto flex justify-between items-center">
+                <a href="/" class="text-white text-xl font-bold flex items-center">
+                    <img id="site-logo" src="images/logo.png" alt="Quva tumani Politexnikomi Logo" class="h-10 mr-3">
+                    <span class="text-white font-bold text-lg" data-i18n="hero-title">Quva tumani Politexnikomi</span>
+                </a>
+                <div class="flex items-center gap-4">
+                    <!-- Menu for desktop -->
+                    <div class="hidden md:flex items-center space-x-6">
+                        <ul class="hidden lg:flex items-center space-x-6">
+                            <li><a href="/" class="text-blue-400 font-bold transition-colors duration-300"
+                                    data-i18n="nav-home">Bosh
+                                    sahifa</a></li>
+                            <li><a href="sohalar.html"
+                                    class="text-white hover:text-blue-300 transition-colors duration-300"
+                                    data-i18n="nav-fields">Yo'nalishlar</a></li>
+                            <li><a href="about.html"
+                                    class="text-white hover:text-blue-300 transition-colors duration-300"
+                                    data-i18n="nav-about">Biz
+                                    haqimizda</a></li>
+                            <li><a href="news.html"
+                                    class="text-white hover:text-blue-300 transition-colors duration-300"
+                                    data-i18n="nav-news">Yangiliklar</a>
+                            </li>
+                            <li><a href="contact.html"
+                                    class="text-white hover:text-blue-300 transition-colors duration-300"
+                                    data-i18n="nav-contact">Aloqa</a>
+                            </li>
+                        </ul>
+                        <!-- Controls -->
+                        <div class="flex items-center space-x-4">
+                            <button id="theme-toggle" class="text-white">
+                                <svg id="theme-toggle-dark-icon" class="w-6 h-6 hidden"
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(255,255,255,1)">
+                                    <path
+                                        d="M11.3807 2.01886C9.91573 3.38768 9 5.3369 9 7.49999C9 11.6421 12.3579 15 16.5 15C18.6631 15 20.6123 14.0843 21.9811 12.6193C21.6613 17.8537 17.3149 22 12 22C6.47715 22 2 17.5228 2 12C2 6.68514 6.14629 2.33869 11.3807 2.01886Z">
+                                    </path>
+                                </svg>
+                                <svg id="theme-toggle-light-icon" class="w-6 h-6" xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24" fill="rgba(255,255,255,1)">
+                                    <path
+                                        d="M12 18C8.68629 18 6 15.3137 6 12C6 8.68629 8.68629 6 12 6C15.3137 6 18 8.68629 18 12C18 15.3137 15.3137 18 12 18ZM12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16ZM11 1H13V4H11V1ZM11 20H13V23H11V20ZM3.51472 4.92893L4.92893 3.51472L7.05025 5.63604L5.63604 7.05025L3.51472 4.92893ZM16.9497 18.364L18.364 16.9497L20.4853 19.0711L19.0711 20.4853L16.9497 18.364ZM19.0711 3.51472L20.4853 4.92893L18.364 7.05025L16.9497 5.63604L19.0711 3.51472ZM5.63604 16.9497L7.05025 18.364L4.92893 20.4853L3.51472 19.0711L5.63604 16.9497ZM23 11V13H20V11H23ZM4 11V13H1V11H4Z">
+                                    </path>
+                                </svg>
+                            </button>
+                            <div class="relative">
+                                <button id="lang-btn" class="text-white flex items-center">
+                                    <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                        fill="rgba(255,255,255,1)">
+                                        <path
+                                            d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM9.71002 19.6674C8.74743 17.6259 8.15732 15.3742 8.02731 13H4.06189C4.458 16.1765 6.71639 18.7747 9.71002 19.6674ZM10.0307 13C10.1811 15.4388 10.8778 17.7297 12 19.752C13.1222 17.7297 13.8189 15.4388 13.9693 13H10.0307ZM19.9381 13H15.9727C15.8427 15.3742 15.2526 17.6259 14.29 19.6674C17.2836 18.7747 19.542 16.1765 19.9381 13ZM4.06189 11H8.02731C8.15732 8.62577 8.74743 6.37407 9.71002 4.33256C6.71639 5.22533 4.458 7.8235 4.06189 11ZM10.0307 11H13.9693C13.8189 8.56122 13.1222 6.27025 12 4.24799C10.8778 6.27025 10.1811 8.56122 10.0307 11ZM14.29 4.33256C15.2526 6.37407 15.8427 8.62577 15.9727 11H19.9381C19.542 7.8235 17.2836 5.22533 14.29 4.33256Z">
+                                        </path>
+                                    </svg>
+                                </button>
+                                <ul id="lang-menu"
+                                    class="absolute right-0 hidden bg-white dark:bg-gray-700 text-gray-800 dark:text-white mt-2 py-1 rounded-md shadow-lg">
+                                    <li><a href="#" data-lang="uz"
+                                            class="lang-option flex items-center px-4 py-2 text-sm">UZ <svg
+                                                class="lang-check w-4 h-4 ml-2 hidden" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M5 13l4 4L19 7"></path>
+                                            </svg></a></li>
+                                    <li><a href="#" data-lang="ru"
+                                            class="lang-option flex items-center px-4 py-2 text-sm">RU <svg
+                                                class="lang-check w-4 h-4 ml-2 hidden" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M5 13l4 4L19 7"></path>
+                                            </svg></a></li>
+                                    <li><a href="#" data-lang="en"
+                                            class="lang-option flex items-center px-4 py-2 text-sm">EN <svg
+                                                class="lang-check w-4 h-4 ml-2 hidden" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M5 13l4 4L19 7"></path>
+                                            </svg></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Hamburger button -->
+                    <div class="lg:hidden flex items-center">
+                        <button id="menu-btn" class="text-white focus:outline-none">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 6h16M4 12h16m-7 6h7"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- Mobile menu -->
+            <div id="mobile-menu" class="hidden lg:hidden">
+                <ul class="mt-4 space-y-2">
+                    <li><a href="/" class="block text-blue-400 font-bold transition-colors duration-300"
+                            data-i18n="nav-home">Bosh
+                            sahifa</a></li>
+                    <li><a href="sohalar.html"
+                            class="block text-white hover:text-blue-300 transition-colors duration-300"
+                            data-i18n="nav-fields">Yo'nalishlar</a></li>
+                    <li><a href="about.html" class="block text-white hover:text-blue-300 transition-colors duration-300"
+                            data-i18n="nav-about">Biz
+                            haqimizda</a></li>
+                    <li><a href="news.html" class="block text-white hover:text-blue-300 transition-colors duration-300"
+                            data-i18n="nav-news">Yangiliklar</a>
+                    </li>
+                    <li><a href="contact.html"
+                            class="block text-white hover:text-blue-300 transition-colors duration-300"
+                            data-i18n="nav-contact">Aloqa</a></li>
+                </ul>
+                <!-- Controls for mobile -->
+                <div class="flex items-center space-x-4 mt-4 md:hidden">
+                    <button id="theme-toggle-mobile" class="text-white">
+                        <svg id="theme-toggle-dark-icon-mobile" class="w-6 h-6 hidden"
+                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(255,255,255,1)">
+                            <path
+                                d="M11.3807 2.01886C9.91573 3.38768 9 5.3369 9 7.49999C9 11.6421 12.3579 15 16.5 15C18.6631 15 20.6123 14.0843 21.9811 12.6193C21.6613 17.8537 17.3149 22 12 22C6.47715 22 2 17.5228 2 12C2 6.68514 6.14629 2.33869 11.3807 2.01886Z">
+                            </path>
+                        </svg>
+                        <svg id="theme-toggle-light-icon-mobile" class="w-6 h-6" xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24" fill="rgba(255,255,255,1)">
+                            <path
+                                d="M12 18C8.68629 18 6 15.3137 6 12C6 8.68629 8.68629 6 12 6C15.3137 6 18 8.68629 18 12C18 15.3137 15.3137 18 12 18ZM12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16ZM11 1H13V4H11V1ZM11 20H13V23H11V20ZM3.51472 4.92893L4.92893 3.51472L7.05025 5.63604L5.63604 7.05025L3.51472 4.92893ZM16.9497 18.364L18.364 16.9497L20.4853 19.0711L19.0711 20.4853L16.9497 18.364ZM19.0711 3.51472L20.4853 4.92893L18.364 7.05025L16.9497 5.63604L19.0711 3.51472ZM5.63604 16.9497L7.05025 18.364L4.92893 20.4853L3.51472 19.0711L5.63604 16.9497ZM23 11V13H20V11H23ZM4 11V13H1V11H4Z">
+                            </path>
+                        </svg>
+                    </button>
+                    <div class="relative">
+                        <button id="lang-btn-mobile" class="text-white flex items-center">
+                            <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                fill="rgba(255,255,255,1)">
+                                <path
+                                    d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM9.71002 19.6674C8.74743 17.6259 8.15732 15.3742 8.02731 13H4.06189C4.458 16.1765 6.71639 18.7747 9.71002 19.6674ZM10.0307 13C10.1811 15.4388 10.8778 17.7297 12 19.752C13.1222 17.7297 13.8189 15.4388 13.9693 13H10.0307ZM19.9381 13H15.9727C15.8427 15.3742 15.2526 17.6259 14.29 19.6674C17.2836 18.7747 19.542 16.1765 19.9381 13ZM4.06189 11H8.02731C8.15732 8.62577 8.74743 6.37407 9.71002 4.33256C6.71639 5.22533 4.458 7.8235 4.06189 11ZM10.0307 11H13.9693C13.8189 8.56122 13.1222 6.27025 12 4.24799C10.8778 6.27025 10.1811 8.56122 10.0307 11ZM14.29 4.33256C15.2526 6.37407 15.8427 8.62577 15.9727 11H19.9381C19.542 7.8235 17.2836 5.22533 14.29 4.33256Z">
+                                </path>
+                            </svg>
+                        </button>
+                        <ul id="lang-menu-mobile"
+                            class="absolute right-0 hidden bg-white dark:bg-gray-700 text-gray-800 dark:text-white mt-2 py-1 rounded-md shadow-lg">
+                            <li><a href="#" data-lang="uz"
+                                    class="lang-option-mobile flex items-center px-4 py-2 text-sm">UZ <svg
+                                        class="lang-check-mobile w-4 h-4 ml-2 hidden" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7"></path>
+                                    </svg></a></li>
+                            <li><a href="#" data-lang="ru"
+                                    class="lang-option-mobile flex items-center px-4 py-2 text-sm">RU <svg
+                                        class="lang-check-mobile w-4 h-4 ml-2 hidden" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7"></path>
+                                    </svg></a></li>
+                            <li><a href="#" data-lang="en"
+                                    class="lang-option-mobile flex items-center px-4 py-2 text-sm">EN <svg
+                                        class="lang-check-mobile w-4 h-4 ml-2 hidden" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7"></path>
+                                    </svg></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <div id="carousel" class="relative w-full h-[81.5vh]">
+            <!-- Dynamic Slides will be injected here -->
+            <div id="hero-carousel-track" class="w-full h-full absolute top-0 left-0">
+                <!-- Fallback / Loading state -->
+                <div class="carousel-slide absolute w-full h-full bg-gray-900 flex items-center justify-center">
+                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
+                </div>
+            </div>
+
+            <!-- Carousel controls -->
+            <button id="prevBtn"
+                class="absolute top-1/2 left-4 transform -translate-y-1/2 bg-white bg-opacity-50 hover:bg-opacity-75 dark:bg-gray-700 dark:bg-opacity-50 dark:hover:bg-opacity-75 p-3 rounded-full shadow-lg z-10 focus:outline-none">
+                <svg class="w-6 h-6 text-gray-800 dark:text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+            </button>
+            <button id="nextBtn"
+                class="absolute top-1/2 right-4 transform -translate-y-1/2 bg-white bg-opacity-50 hover:bg-opacity-75 dark:bg-gray-700 dark:bg-opacity-50 dark:hover:bg-opacity-75 p-3 rounded-full shadow-lg z-10 focus:outline-none">
+                <svg class="w-6 h-6 text-gray-800 dark:text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+            </button>
+        </div>
+        <div class="w-full dark:bg-gray-800 backdrop-blur-sm">
+            <div class="w-full max-w-5xl mx-auto">
+                <div
+                    class="grid grid-cols-1 md:grid-cols-4 gap-4 text-center bg-white/70 dark:bg-gray-800 backdrop-blur-sm p-3">
+                    <div class="p-4">
+                        <p class="text-4xl font-bold text-blue-900 dark:text-blue-300"><span id="stat-students"
+                                class="count-up" data-target="1200">0</span>+</p>
+                        <p class="mt-2 text-lg text-gray-700 dark:text-gray-200" data-i18n="stat-students">O'quvchilar
+                        </p>
+                    </div>
+                    <div class="p-4">
+                        <p class="text-4xl font-bold text-blue-900 dark:text-blue-300"><span id="stat-fields"
+                                class="count-up" data-target="15">0</span>+</p>
+                        <p class="mt-2 text-lg text-gray-700 dark:text-gray-200" data-i18n="stat-fields">Sohalar</p>
+                    </div>
+                    <div class="p-4">
+                        <p class="text-4xl font-bold text-blue-900 dark:text-blue-300"><span id="stat-uni"
+                                class="count-up" data-target="75">0</span>%</p>
+                        <p class="mt-2 text-lg text-gray-700 dark:text-gray-200" data-i18n="stat-uni">OTMga kirganlar
+                        </p>
+                    </div>
+                    <div class="flex items-center justify-center p-4">
+                        <a href="#"
+                            class="flex items-center justify-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-full shadow-lg transition-colors duration-300 dark:bg-blue-700 dark:hover:bg-blue-800">
+                            <span data-i18n="btn-about">Kollej haqida</span>
+                            <svg class="w-5 h-5 ml-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                fill="rgba(255,255,255,1)">
+                                <path
+                                    d="M1.99974 13.0001L1.99960 11.0002L18.1715 11.0002L14.2218 7.05044L15.636 5.63623L22 12.0002L15.636 18.3642L14.2218 16.9499L18.1716 13.0002L1.99974 13.0001Z">
+                                </path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- Hero Section -->
+    <main class="pt-32 pb-12">
+        <section class="relative w-full py-8 md:py-16 bg-gray-100 dark:bg-gray-900 overflow-hidden">
+            <!-- News Carousel Container -->
+            <div id="home-news-container" class="relative w-full h-[500px] overflow-hidden">
+                <!-- Dynamic News Slides Will Be Loaded Here -->
+            </div>
+            </div>
+
+            <!-- Carousel Controls -->
+            <div
+                class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-7xl mx-auto px-4 flex justify-between z-20">
+                <button id="info-prev"
+                    class="bg-white bg-opacity-75 hover:bg-opacity-100 dark:bg-gray-700 dark:hover:bg-gray-600 p-3 rounded-full shadow-lg focus:outline-none">
+                    <svg class="w-6 h-6 text-gray-800 dark:text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+                <button id="info-next"
+                    class="bg-white bg-opacity-75 hover:bg-opacity-100 dark:bg-gray-700 dark:hover:bg-gray-600 p-3 rounded-full shadow-lg focus:outline-none">
+                    <svg class="w-6 h-6 text-gray-800 dark:text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </button>
+            </div>
+        </section>
+
+        <section class="py-20 bg-gray-50 dark:bg-gray-900">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4"
+                        data-i18n="fields-title">Bizda Mavjud Sohalar
+                    </h2>
+                    <p class="text-lg text-gray-700 dark:text-gray-300 max-w-2xl mx-auto" data-i18n="fields-subtitle">
+                        Kelajagingizni biz bilan
+                        quring. O'zingizga mos yo'nalishni tanlang va professional bo'lib yetishing.</p>
+                </div>
+
+                <div id="home-fields-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                    <!-- Dynamic Fields Will Be Loaded Here -->
+                </div>
+
+                <div class="flex justify-center mt-16">
+                    <a href="sohalar.html"
+                        class="group relative px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-full shadow-lg hover:shadow-blue-500/50 transition-all duration-300 dark:bg-blue-700 dark:hover:bg-blue-800 overflow-hidden">
+                        <span class="relative z-10 flex items-center">
+                            <span data-i18n="btn-all-fields">Barcha sohalarni ko'rish</span>
+                            <svg class="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform"
+                                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(255,255,255,1)">
+                                <path
+                                    d="M1.99974 13.0001L1.99960 11.0002L18.1715 11.0002L14.2218 7.05044L15.636 5.63623L22 12.0002L15.636 18.3642L14.2218 16.9499L18.1716 13.0002L1.99974 13.0001Z">
+                                </path>
+                            </svg>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- STATISTICS SECTION -->
+        <section class="py-16 bg-blue-900 text-white relative overflow-hidden">
+            <div class="container mx-auto px-4 relative z-10">
+                <h2 class="text-3xl md:text-4xl font-bold text-center mb-12" data-i18n="achieve-title">Yutuqlarimiz
+                    Raqamlarda</h2>
+                <div class="max-w-4xl mx-auto">
+                    <!-- Stat Item: O'quvchilar -->
+                    <div class="mb-8">
+                        <div class="flex justify-between items-end mb-2">
+                            <span class="text-xl font-bold text-blue-200" data-i18n="stat-total">Jami O'quvchilar</span>
+                            <span class="text-2xl font-bold"><span class="count-up" data-target="1200">0</span>+</span>
+                        </div>
+                        <div class="w-full bg-blue-900/50 rounded-full h-4 border border-blue-500/30 overflow-hidden">
+                            <div class="bg-gradient-to-r from-blue-400 to-blue-600 h-4 rounded-full bar-chart-fill transition-all duration-1000 ease-out w-0"
+                                style="width: 0%" data-width="100%"></div>
+                        </div>
+                        <p class="text-sm text-blue-200/70 mt-2 text-left">Kollejimizda 1200 dan ortiq iqtidorli yoshlar
+                            tahsil olmoqda.</p>
+                    </div>
+
+                    <!-- Stat Item: Dasturiy Injiniring -->
+                    <div class="mb-8">
+                        <div class="flex justify-between items-end mb-2">
+                            <span class="text-xl font-bold text-blue-200" data-i18n="stat-soft-percent">Dasturiy
+                                Injiniring</span>
+                            <span class="text-2xl font-bold"><span id="stat-soft" class="count-up"
+                                    data-target="85">0</span>%</span>
+                        </div>
+                        <div class="w-full bg-blue-900/50 rounded-full h-4 border border-blue-500/30 overflow-hidden">
+                            <div class="bg-gradient-to-r from-blue-400 to-blue-600 h-4 rounded-full bar-chart-fill transition-all duration-1000 ease-out w-0"
+                                style="width: 0%" data-width="85%"></div>
+                        </div>
+                        <p class="text-sm text-blue-200/70 mt-2 text-left">Eng ko'p talab qilinadigan va yuqori maoshli
+                            soha.</p>
+                    </div>
+
+                    <!-- Stat Item: Kompyuter Tarmoqlari -->
+                    <div class="mb-8">
+                        <div class="flex justify-between items-end mb-2">
+                            <span class="text-xl font-bold text-blue-200" data-i18n="stat-net-percent">Kompyuter
+                                Tarmoqlari</span>
+                            <span class="text-2xl font-bold"><span id="stat-net" class="count-up"
+                                    data-target="70">0</span>%</span>
+                        </div>
+                        <div class="w-full bg-blue-900/50 rounded-full h-4 border border-blue-500/30 overflow-hidden">
+                            <div class="bg-gradient-to-r from-blue-400 to-blue-600 h-4 rounded-full bar-chart-fill transition-all duration-1000 ease-out w-0"
+                                style="width: 0%" data-width="70%"></div>
+                        </div>
+                        <p class="text-sm text-blue-200/70 mt-2 text-left">Zamonaviy tarmoq infratuzilmasi
+                            mutaxassislari.</p>
+                    </div>
+
+                    <!-- Stat Item: Buxgalteriya -->
+                    <div class="mb-8">
+                        <div class="flex justify-between items-end mb-2">
+                            <span class="text-xl font-bold text-blue-200" data-i18n="stat-account-percent">Buxgalteriya
+                                va Moliya</span>
+                            <span class="text-2xl font-bold"><span id="stat-account" class="count-up"
+                                    data-target="90">0</span>%</span>
+                        </div>
+                        <div class="w-full bg-blue-900/50 rounded-full h-4 border border-blue-500/30 overflow-hidden">
+                            <div class="bg-gradient-to-r from-blue-400 to-blue-600 h-4 rounded-full bar-chart-fill transition-all duration-1000 ease-out w-0"
+                                style="width: 0%" data-width="90%"></div>
+                        </div>
+                        <p class="text-sm text-blue-200/70 mt-2 text-left">Raqamli iqtisodiyot talablariga mos
+                            buxgalterlar.</p>
+                    </div>
+
+                    <!-- Stat Item: OTMga Kirish -->
+                    <div class="mb-8">
+                        <div class="flex justify-between items-end mb-2">
+                            <span class="text-xl font-bold text-blue-200" data-i18n="stat-uni-percent">OTMga Kirish
+                                Ko'rsatkichi</span>
+                            <span class="text-2xl font-bold"><span id="stat-uni-achieve" class="count-up"
+                                    data-target="75">0</span>%</span>
+                        </div>
+                        <div class="w-full bg-blue-900/50 rounded-full h-4 border border-blue-500/30 overflow-hidden">
+                            <div class="bg-gradient-to-r from-blue-400 to-blue-600 h-4 rounded-full bar-chart-fill transition-all duration-1000 ease-out w-0"
+                                style="width: 0%" data-width="75%"></div>
+                        </div>
+                        <p class="text-sm text-blue-200/70 mt-2 text-left">Bitiruvchilarimizning aksariyati oliy ta'lim
+                            muassasalarida o'qishni davom ettirmoqda.</p>
+                    </div>
+                </div>
+            </div>
+            </div>
+            </div>
+            </div>
+            </div>
+            </div>
+        </section>
+
+        <!-- ACTIVE STUDENTS SECTION -->
+        <section class="py-20 bg-white dark:bg-gray-800">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl md:text-4xl font-bold text-center text-gray-900 dark:text-white mb-12"
+                    data-i18n="students-title">Bizning
+                    Faxrimiz - Aktiv O'quvchilar</h2>
+
+                <div class="relative max-w-6xl mx-auto group">
+                    <!-- Scroll Container -->
+                    <div id="students-scroll"
+                        class="flex overflow-x-auto gap-6 pb-8 snap-x snap-mandatory scrollbar-hide scroll-smooth"
+                        style="scrollbar-width: none; -ms-overflow-style: none;">
+                        <!-- Student 1 -->
+                        <div
+                            class="min-w-[300px] md:min-w-[350px] bg-gray-50 dark:bg-gray-700 rounded-2xl p-6 shadow-lg snap-center text-center transform hover:-translate-y-2 transition-transform duration-300 border border-gray-100 dark:border-gray-600">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Student"
+                                class="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-blue-500 object-cover">
+                            <h3 class="text-xl font-bold text-gray-900 dark:text-white">Azizbek Tursunov</h3>
+                            <p class="text-blue-600 dark:text-blue-400 mb-2 font-medium">Dasturiy Injiniring</p>
+                            <p class="text-gray-600 dark:text-gray-300 text-sm italic">"One Million Uzbek Coders"
+                                g'olibi, 3 ta xalqaro loyiha muallifi.</p>
+                        </div>
+                        <!-- Student 2 -->
+                        <div
+                            class="min-w-[300px] md:min-w-[350px] bg-gray-50 dark:bg-gray-700 rounded-2xl p-6 shadow-lg snap-center text-center transform hover:-translate-y-2 transition-transform duration-300 border border-gray-100 dark:border-gray-600">
+                            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Student"
+                                class="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-purple-500 object-cover">
+                            <h3 class="text-xl font-bold text-gray-900 dark:text-white">Malika Karimova</h3>
+                            <p class="text-blue-600 dark:text-blue-400 mb-2 font-medium">Dizayn</p>
+                            <p class="text-gray-600 dark:text-gray-300 text-sm italic">Xalqaro dizayn tanlovi g'olibi,
+                                kollej brendingi muallifi.</p>
+                        </div>
+                        <!-- Student 3 -->
+                        <div
+                            class="min-w-[300px] md:min-w-[350px] bg-gray-50 dark:bg-gray-700 rounded-2xl p-6 shadow-lg snap-center text-center transform hover:-translate-y-2 transition-transform duration-300 border border-gray-100 dark:border-gray-600">
+                            <img src="https://randomuser.me/api/portraits/men/85.jpg" alt="Student"
+                                class="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-green-500 object-cover">
+                            <h3 class="text-xl font-bold text-gray-900 dark:text-white">Javohir Aliyev</h3>
+                            <p class="text-blue-600 dark:text-blue-400 mb-2 font-medium">Kompyuter Tarmoqlari</p>
+                            <p class="text-gray-600 dark:text-gray-300 text-sm italic">Cisco sertifikati egasi,
+                                WorldSkills ishtirokchisi.</p>
+                        </div>
+                        <!-- Student 4 -->
+                        <div
+                            class="min-w-[300px] md:min-w-[350px] bg-gray-50 dark:bg-gray-700 rounded-2xl p-6 shadow-lg snap-center text-center transform hover:-translate-y-2 transition-transform duration-300 border border-gray-100 dark:border-gray-600">
+                            <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Student"
+                                class="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-yellow-500 object-cover">
+                            <h3 class="text-xl font-bold text-gray-900 dark:text-white">Dildora Nurmatova</h3>
+                            <p class="text-blue-600 dark:text-blue-400 mb-2 font-medium">Buxgalteriya</p>
+                            <p class="text-gray-600 dark:text-gray-300 text-sm italic">Viloyat olimpiadasi g'olibi,
+                                a'lochi talaba.</p>
+                        </div>
+                        <!-- Student 5 -->
+                        <div
+                            class="min-w-[300px] md:min-w-[350px] bg-gray-50 dark:bg-gray-700 rounded-2xl p-6 shadow-lg snap-center text-center transform hover:-translate-y-2 transition-transform duration-300 border border-gray-100 dark:border-gray-600">
+                            <img src="https://randomuser.me/api/portraits/men/11.jpg" alt="Student"
+                                class="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-red-500 object-cover">
+                            <h3 class="text-xl font-bold text-gray-900 dark:text-white">Otabek Sobirov</h3>
+                            <p class="text-blue-600 dark:text-blue-400 mb-2 font-medium">Avtomobilsozlik</p>
+                            <p class="text-gray-600 dark:text-gray-300 text-sm italic">O'z ixtirosi bilan Respublika
+                                tanlovida 1-o'rinni egallagan.</p>
+                        </div>
+                    </div>
+
+                    <!-- Controls -->
+                    <div class="flex justify-center mt-8 gap-4">
+                        <button id="scroll-left"
+                            class="p-3 rounded-full bg-white dark:bg-gray-700 shadow-md hover:shadow-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-all border border-gray-200 dark:border-gray-600 group-hover:scale-110">
+                            <svg class="w-6 h-6 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 19l-7-7 7-7"></path>
+                            </svg>
+                        </button>
+                        <button id="scroll-right"
+                            class="p-3 rounded-full bg-white dark:bg-gray-700 shadow-md hover:shadow-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-all border border-gray-200 dark:border-gray-600 group-hover:scale-110">
+                            <svg class="w-6 h-6 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
+                                </path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACT SECTION -->
+        <section class="py-20 bg-gray-100 dark:bg-gray-900" id="contact">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl md:text-4xl font-bold text-center text-gray-900 dark:text-white mb-12"
+                    data-i18n="contact-title">Biz Bilan
+                    Bog'laning</h2>
+
+                <div
+                    class="grid grid-cols-1 lg:grid-cols-2 gap-0 max-w-6xl mx-auto rounded-3xl overflow-hidden shadow-2xl bg-white dark:bg-gray-800">
+                    <!-- Form -->
+                    <div class="p-8 md:p-12">
+                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-6"
+                            data-i18n="contact-form-title">Xabar Qoldiring</h3>
+                        <form class="space-y-6">
+                            <div>
+                                <label class="block text-gray-700 dark:text-gray-300 mb-2 font-medium"
+                                    data-i18n="label-name">Ismingiz</label>
+                                <input type="text"
+                                    class="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all dark:text-white"
+                                    placeholder="Ismingizni kiriting" data-i18n="label-name">
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 dark:text-gray-300 mb-2 font-medium"
+                                    data-i18n="label-phone">Telefon
+                                    raqamingiz</label>
+                                <input type="tel"
+                                    class="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all dark:text-white"
+                                    placeholder="+998 90 123 45 67">
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 dark:text-gray-300 mb-2 font-medium"
+                                    data-i18n="label-msg">Xabaringiz</label>
+                                <textarea rows="4"
+                                    class="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all dark:text-white"
+                                    placeholder="Savol yoki taklifingizni yozing..." data-i18n="label-msg"></textarea>
+                            </div>
+                            <button type="button"
+                                class="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-lg hover:shadow-blue-500/50 transition-all duration-300"
+                                data-i18n="btn-send">
+                                Yuborish
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Map -->
+                    <div class="relative h-96 lg:h-auto bg-gray-200">
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1516.357878696084!2d72.06202531539656!3d40.5297129793522!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38bc865555555555%3A0x5555555555555555!2sQuva%20Politexnikumi!5e0!3m2!1sen!2s!4v1645000000000!5m2!1sen!2s"
+                            width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer class="bg-gray-900 text-white pt-16 pb-8 border-t border-gray-800">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
+                <!-- Column 1: Brand & About -->
+                <div class="space-y-6">
+                    <div class="flex items-center">
+                        <img src="./images/logo.png" alt="Logo" class="h-12 mr-3">
+                        <span class="font-bold text-xl tracking-wide">Quva Politexnikumi</span>
+                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed max-w-xs" data-i18n="footer-desc">
+                        Kelajak kasblarini biz bilan egallang. Zamonaviy ta'lim, innovatsion texnologiyalar va amaliy
+                        ko'nikmalar maskani.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-blue-600 transition-all duration-300 group">
+                            <svg class="w-5 h-5 text-gray-400 group-hover:text-white" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                            </svg>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-pink-600 transition-all duration-300 group">
+                            <svg class="w-5 h-5 text-gray-400 group-hover:text-white" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                </path>
+                            </svg>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-blue-800 transition-all duration-300 group">
+                            <svg class="w-5 h-5 text-gray-400 group-hover:text-white" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"></path>
+                            </svg>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-red-600 transition-all duration-300 group">
+                            <svg class="w-5 h-5 text-gray-400 group-hover:text-white" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z">
+                                </path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Column 2: Quick Links -->
+                <div class="md:pl-10">
+                    <h4 class="text-white font-bold text-lg mb-6 relative inline-block">
+                        <span data-i18n="footer-pages">Sahifalar</span>
+                        <span class="absolute bottom-0 left-0 w-1/2 h-1 bg-blue-500 rounded-full"></span>
+                    </h4>
+                    <ul class="space-y-4">
+                        <li><a href="/"
+                                class="text-blue-400 font-bold transition-transform duration-300 inline-block flex items-center"><span
+                                    class="w-1.5 h-1.5 bg-blue-500 rounded-full mr-2"></span><span
+                                    data-i18n="nav-home">Bosh sahifa</span></a></li>
+                        <li><a href="sohalar.html"
+                                class="text-gray-400 hover:text-white hover:translate-x-2 transition-transform duration-300 inline-block flex items-center"><span
+                                    class="w-1.5 h-1.5 bg-blue-500 rounded-full mr-2"></span><span
+                                    data-i18n="nav-fields">Yo'nalishlar</span></a></li>
+                        <li><a href="about.html"
+                                class="text-gray-400 hover:text-white hover:translate-x-2 transition-transform duration-300 inline-block flex items-center"><span
+                                    class="w-1.5 h-1.5 bg-blue-500 rounded-full mr-2"></span><span
+                                    data-i18n="nav-about">Biz haqimizda</span></a></li>
+                        <li><a href="news.html"
+                                class="text-gray-400 hover:text-white hover:translate-x-2 transition-transform duration-300 inline-block flex items-center"><span
+                                    class="w-1.5 h-1.5 bg-blue-500 rounded-full mr-2"></span><span
+                                    data-i18n="nav-news">Yangiliklar</span></a></li>
+                        <li><a href="contact.html"
+                                class="text-gray-400 hover:text-white hover:translate-x-2 transition-transform duration-300 inline-block flex items-center"><span
+                                    class="w-1.5 h-1.5 bg-blue-500 rounded-full mr-2"></span><span
+                                    data-i18n="nav-contact">Aloqa</span></a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 3: Contact Info -->
+                <div>
+                    <h4 class="text-white font-bold text-lg mb-6 relative inline-block">
+                        <span data-i18n="footer-contact">Bog'lanish</span>
+                        <span class="absolute bottom-0 left-0 w-1/2 h-1 bg-blue-500 rounded-full"></span>
+                    </h4>
+                    <ul class="space-y-4">
+                        <li class="flex items-start group">
+                            <div
+                                class="w-10 h-10 rounded-lg bg-gray-800 flex-shrink-0 flex items-center justify-center mr-4 group-hover:bg-blue-600 transition-colors duration-300">
+                                <svg class="w-5 h-5 text-blue-500 group-hover:text-white" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z">
+                                    </path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                </svg>
+                            </div>
+                            <span class="text-gray-400 text-sm leading-relaxed pt-2" data-i18n="footer-address">Farg'ona
+                                viloyati, Quva
+                                tumani,<br>A.Navoiy ko'chasi 1-uy</span>
+                        </li>
+                        <li class="flex items-center group">
+                            <div
+                                class="w-10 h-10 rounded-lg bg-gray-800 flex-shrink-0 flex items-center justify-center mr-4 group-hover:bg-blue-600 transition-colors duration-300">
+                                <svg class="w-5 h-5 text-blue-500 group-hover:text-white" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z">
+                                    </path>
+                                </svg>
+                            </div>
+                            <span class="text-gray-400 text-sm font-medium">+998 73 123 45 67</span>
+                        </li>
+                        <li class="flex items-center group">
+                            <div
+                                class="w-10 h-10 rounded-lg bg-gray-800 flex-shrink-0 flex items-center justify-center mr-4 group-hover:bg-blue-600 transition-colors duration-300">
+                                <svg class="w-5 h-5 text-blue-500 group-hover:text-white" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
+                                    </path>
+                                </svg>
+                            </div>
+                            <span class="text-gray-400 text-sm font-medium">info@quvapolitex.uz</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-500 text-sm" data-i18n="footer-rights">&copy; 2024 Quva tumani Politexnikumi. Barcha
+                    huquqlar himoyalangan.
+                </p>
+                <div class="flex space-x-6 mt-4 md:mt-0">
+                    <a href="#" class="text-gray-500 hover:text-white text-sm transition-colors"
+                        data-i18n="footer-privacy">Maxfiylik siyosati</a>
+                    <a href="#" class="text-gray-500 hover:text-white text-sm transition-colors"
+                        data-i18n="footer-terms">Foydalanish
+                        shartlari</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <button id="backToTop"
+        class="hidden fixed bottom-8 right-8 bg-blue-600 text-white p-3 rounded-full shadow-lg hover:bg-blue-700 transition-all z-50">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+        </svg>
+    </button>
+    <script src="js/active-students-loader.js"></script>
+    <script src="script.js"></script>
+    <script src="dynamic-content.js"></script>
+</body>

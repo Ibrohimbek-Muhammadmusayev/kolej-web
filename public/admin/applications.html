@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arizalar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100">
+
+    <main class="fade-in">
+        <div class="flex justify-between items-end mb-8">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800 tracking-tight">Kelib Tushgan Arizalar</h1>
+                <p class="text-gray-500 mt-1">O'quvchilardan kelib tushgan onlayn arizalarni boshqarish</p>
+            </div>
+
+            <!-- Filters -->
+            <div class="flex space-x-3 items-center">
+                <div class="relative">
+                    <select id="status-filter"
+                        class="appearance-none bg-white border border-gray-200 text-gray-700 py-2.5 pl-4 pr-10 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent font-medium transition-all cursor-pointer"
+                        onchange="loadApplications()">
+                        <option value="">Barchasi</option>
+                        <option value="new">Yangi 🔵</option>
+                        <option value="contacted">Bog'lanildi 🟡</option>
+                        <option value="archived">Arxiv 🟢</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+                <button onclick="loadApplications()"
+                    class="bg-gray-800 text-white px-5 py-2.5 rounded-xl hover:bg-gray-900 font-bold shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 flex items-center space-x-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
+                        </path>
+                    </svg>
+                    <span>Yangilash</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Table -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr
+                            class="bg-gray-50/50 border-b border-gray-100 text-xs uppercase tracking-wider text-gray-500 font-semibold">
+                            <th class="p-5 w-16 text-center">ID</th>
+                            <th class="p-5">Mas'ul Shaxs (F.I.SH)</th>
+                            <th class="p-5">Aloqa u-n</th>
+                            <th class="p-5 text-center">Yo'nalish</th>
+                            <th class="p-5 text-center">Sana</th>
+                            <th class="p-5 text-center">Holat</th>
+                            <th class="p-5 text-right w-32">Amallar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="app-table-body" class="divide-y divide-gray-50 text-sm text-gray-700">
+                        <!-- Content -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Details Modal -->
+    <div id="modal"
+        class="fixed inset-0 bg-gray-900/60 hidden z-50 flex items-center justify-center backdrop-blur-sm transition-opacity">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl p-0 overflow-hidden transform transition-all scale-95 opacity-0"
+            id="modal-container">
+            <div class="px-8 py-5 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+                <h2 class="text-2xl font-bold text-gray-800">Ariza Tafsilotlari</h2>
+                <button onclick="closeModal()"
+                    class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300 text-gray-600 transition-colors">
+                    &times;
+                </button>
+            </div>
+
+            <div class="p-8 space-y-4 text-base" id="modal-content">
+                <!-- Content injected here -->
+            </div>
+
+            <div class="px-8 py-5 border-t border-gray-100 bg-gray-50/80 flex justify-end space-x-3">
+                <button onclick="updateStatus('contacted')"
+                    class="bg-yellow-500 text-white px-5 py-2.5 rounded-xl font-bold hover:bg-yellow-600 shadow-md transition-all transform hover:-translate-y-0.5 flex items-center space-x-2">
+                    <span>Bog'lanildi</span>
+                </button>
+                <button onclick="updateStatus('archived')"
+                    class="bg-emerald-600 text-white px-5 py-2.5 rounded-xl font-bold hover:bg-emerald-700 shadow-md transition-all transform hover:-translate-y-0.5 flex items-center space-x-2">
+                    <span>Arxivlash</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/admin.js"></script>
+    <script src="js/applications.js"></script>
+</body>
+
+</html>

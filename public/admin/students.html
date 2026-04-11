@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faol O'quvchilar Boshqaruvi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100">
+
+    <main class="fade-in">
+        <div class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800 tracking-tight">Faol O'quvchilar</h1>
+                <p class="text-gray-500 mt-1">Kollejdagi faol va iqtidorli o'quvchilarni boshqarish</p>
+            </div>
+            <button onclick="openModal()"
+                class="bg-blue-600 text-white px-5 py-2.5 rounded-xl hover:bg-blue-700 font-bold shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 flex items-center space-x-2">
+                <span class="text-xl">+</span>
+                <span>Yangi Qo'shish</span>
+            </button>
+        </div>
+
+        <!-- Table -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr
+                            class="bg-gray-50/50 border-b border-gray-100 text-xs uppercase tracking-wider text-gray-500 font-semibold">
+                            <th class="p-5 w-16 text-center">ID</th>
+                            <th class="p-5 w-24">Rasm</th>
+                            <th class="p-5">F.I.SH (UZ)</th>
+                            <th class="p-5">Yo'nalish (UZ)</th>
+                            <th class="p-5 w-20 text-center">Tartib</th>
+                            <th class="p-5 text-right w-32">Amallar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="students-table-body" class="divide-y divide-gray-50 text-sm text-gray-700">
+                        <!-- Rows injected by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal -->
+    <div id="modal"
+        class="fixed inset-0 bg-gray-900/60 hidden z-50 flex items-center justify-center backdrop-blur-sm transition-opacity">
+        <div class="bg-white rounded-2xl w-full max-w-3xl max-h-[90vh] shadow-2xl overflow-hidden flex flex-col transform transition-all scale-95 opacity-0"
+            id="modal-content">
+            <div class="px-8 py-5 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+                <div>
+                    <h2 id="modal-title" class="text-2xl font-bold text-gray-800">Faol O'quvchi qo'shish</h2>
+                    <p class="text-sm text-gray-500 mt-1">Ma'lumotlarni tillar kesimida kiriting</p>
+                </div>
+                <button onclick="closeModal()"
+                    class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300 text-gray-600 transition-colors">
+                    &times;
+                </button>
+            </div>
+
+            <div class="p-8 overflow-y-auto flex-1">
+                <form id="student-form" class="space-y-6">
+                    <input type="hidden" id="student-id">
+
+                    <!-- Language Tabs -->
+                    <div class="flex p-1 bg-gray-100 rounded-xl mb-6">
+                        <button type="button" onclick="switchTab('uz')" id="tab-btn-uz"
+                            class="flex-1 py-2.5 rounded-lg font-bold text-sm transition-all bg-white text-blue-600 shadow-sm">O'zbekcha</button>
+                        <button type="button" onclick="switchTab('ru')" id="tab-btn-ru"
+                            class="flex-1 py-2.5 rounded-lg font-medium text-sm transition-all text-gray-500 hover:text-gray-700 hover:bg-gray-200/50">Ruscha</button>
+                        <button type="button" onclick="switchTab('en')" id="tab-btn-en"
+                            class="flex-1 py-2.5 rounded-lg font-medium text-sm transition-all text-gray-500 hover:text-gray-700 hover:bg-gray-200/50">Inglizcha</button>
+                    </div>
+
+                    <!-- UZ Fields -->
+                    <div id="tab-uz" class="space-y-5">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1.5">F.I.SH (UZ)</label>
+                            <input type="text" id="full_name_uz"
+                                class="w-full px-4 py-3 rounded-xl bg-gray-50 border-transparent focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 transition-all font-medium"
+                                required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Yo'nalish (UZ)</label>
+                            <input type="text" id="field_uz"
+                                class="w-full px-4 py-3 rounded-xl bg-gray-50 border-transparent focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 transition-all"
+                                required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Yutug'i (UZ)</label>
+                            <textarea id="achievement_uz"
+                                class="w-full px-4 py-3 rounded-xl bg-gray-50 border-transparent focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 transition-all h-24 resize-none leading-relaxed"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- RU Fields -->
+                    <div id="tab-ru" class="space-y-5 hidden">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1.5">F.I.SH (RU)</label>
+                            <input type="text" id="full_name_ru"
+                                class="w-full px-4 py-3 rounded-xl bg-gray-50 border-transparent focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 transition-all font-medium">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Yo'nalish (RU)</label>
+                            <input type="text" id="field_ru"
+                                class="w-full px-4 py-3 rounded-xl bg-gray-50 border-transparent focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Yutug'i (RU)</label>
+                            <textarea id="achievement_ru"
+                                class="w-full px-4 py-3 rounded-xl bg-gray-50 border-transparent focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 transition-all h-24 resize-none leading-relaxed"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- EN Fields -->
+                    <div id="tab-en" class="space-y-5 hidden">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1.5">F.I.SH (EN)</label>
+                            <input type="text" id="full_name_en"
+                                class="w-full px-4 py-3 rounded-xl bg-gray-50 border-transparent focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 transition-all font-medium">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Yo'nalish (EN)</label>
+                            <input type="text" id="field_en"
+                                class="w-full px-4 py-3 rounded-xl bg-gray-50 border-transparent focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Yutug'i (EN)</label>
+                            <textarea id="achievement_en"
+                                class="w-full px-4 py-3 rounded-xl bg-gray-50 border-transparent focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 transition-all h-24 resize-none leading-relaxed"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Shared Fields -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-gray-100">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Rasm</label>
+                            <input type="file" id="image"
+                                class="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Tartib Raqami</label>
+                            <input type="number" id="order"
+                                class="w-full px-4 py-3 rounded-xl bg-gray-50 border-transparent focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 transition-all"
+                                value="0">
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="px-8 py-5 border-t border-gray-100 bg-gray-50/80 flex justify-end space-x-3">
+                <button type="button" onclick="closeModal()"
+                    class="px-6 py-2.5 rounded-xl text-gray-600 font-bold hover:bg-gray-200 transition-colors">Bekor
+                    qilish</button>
+                <button type="button" onclick="document.getElementById('student-form').requestSubmit()"
+                    class="bg-blue-600 text-white px-8 py-2.5 rounded-xl font-bold hover:bg-blue-700 shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5">Saqlash</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/admin.js"></script>
+    <script src="js/students.js"></script>
+</body>
+
+</html>

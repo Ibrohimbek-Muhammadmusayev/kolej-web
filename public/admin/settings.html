@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sayt Sozlamalari</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100">
+
+    <main class="fade-in">
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 tracking-tight">Sayt Sozlamalari</h1>
+            <p class="text-gray-500 mt-1">Asosiy sahifa matnlari va aloqa ma'lumotlarini tahrirlash</p>
+        </div>
+
+        <form id="settings-form"
+            class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 max-w-5xl space-y-8 relative overflow-hidden">
+            <!-- Decorative Background Element -->
+            <div
+                class="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 rounded-full bg-gradient-to-br from-blue-50 to-indigo-50/30 blur-3xl -z-10 pointer-events-none">
+            </div>
+
+            <!-- Language Tabs -->
+            <div class="flex p-1 bg-gray-100 rounded-xl max-w-md">
+                <button type="button" onclick="switchTab('uz')" id="tab-btn-uz"
+                    class="flex-1 py-2.5 rounded-lg font-bold text-sm transition-all bg-white text-blue-600 shadow-sm">O'zbekcha</button>
+                <button type="button" onclick="switchTab('ru')" id="tab-btn-ru"
+                    class="flex-1 py-2.5 rounded-lg font-medium text-sm transition-all text-gray-500 hover:text-gray-700 hover:bg-gray-200/50">Ruscha</button>
+                <button type="button" onclick="switchTab('en')" id="tab-btn-en"
+                    class="flex-1 py-2.5 rounded-lg font-medium text-sm transition-all text-gray-500 hover:text-gray-700 hover:bg-gray-200/50">Inglizcha</button>
+            </div>
+
+            <!-- UZ Fields -->
+            <div id="tab-uz" class="space-y-6">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">Sayt Sarlavhasi (UZ)</label>
+                    <input type="text" id="hero_title_uz"
+                        class="w-full px-4 py-3 rounded-xl bg-gray-50 border-transparent focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 transition-all font-medium">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">Manzil (UZ)</label>
+                    <textarea id="contact_address_uz"
+                        class="w-full px-4 py-3 rounded-xl bg-gray-50 border-transparent focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 transition-all h-24 resize-none leading-relaxed"></textarea>
+                </div>
+            </div>
+
+            <!-- RU Fields -->
+            <div id="tab-ru" class="space-y-6 hidden">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">Sayt Sarlavhasi (RU)</label>
+                    <input type="text" id="hero_title_ru"
+                        class="w-full px-4 py-3 rounded-xl bg-gray-50 border-transparent focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 transition-all font-medium">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">Manzil (RU)</label>
+                    <textarea id="contact_address_ru"
+                        class="w-full px-4 py-3 rounded-xl bg-gray-50 border-transparent focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 transition-all h-24 resize-none leading-relaxed"></textarea>
+                </div>
+            </div>
+
+            <!-- EN Fields -->
+            <div id="tab-en" class="space-y-6 hidden">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">Sayt Sarlavhasi (EN)</label>
+                    <input type="text" id="hero_title_en"
+                        class="w-full px-4 py-3 rounded-xl bg-gray-50 border-transparent focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 transition-all font-medium">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">Manzil (EN)</label>
+                    <textarea id="contact_address_en"
+                        class="w-full px-4 py-3 rounded-xl bg-gray-50 border-transparent focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 transition-all h-24 resize-none leading-relaxed"></textarea>
+                </div>
+            </div>
+
+            <hr class="border-gray-100">
+
+            <!-- Global Fields -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">Telefon Raqam</label>
+                    <input type="text" id="contact_phone"
+                        class="w-full px-4 py-3 rounded-xl bg-gray-50 border-transparent focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 transition-all font-medium">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">Email</label>
+                    <input type="email" id="contact_email"
+                        class="w-full px-4 py-3 rounded-xl bg-gray-50 border-transparent focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 transition-all font-medium">
+                </div>
+                <div class="col-span-full">
+                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">Google Xarita (Embed Link)</label>
+                    <input type="text" id="map_url"
+                        class="w-full px-4 py-3 rounded-xl bg-gray-50 border-transparent focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 transition-all text-gray-600">
+                    <p class="text-xs text-gray-500 mt-2">Maslahat: Google Maps -> Share -> Embed map ->
+                        <code>src="..."</code> ichidagi linkni nusxalab qo'ying.</p>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between pt-6 border-t border-gray-100">
+                <p id="message" class="text-emerald-600 font-bold hidden bg-emerald-50 px-4 py-2 rounded-lg"></p>
+                <button type="submit"
+                    class="ml-auto bg-blue-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-blue-700 shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5">
+                    O'zgarishlarni Saqlash
+                </button>
+            </div>
+        </form>
+    </main>
+
+    <script src="js/admin.js"></script>
+    <script src="js/settings.js"></script>
+</body>
+
+</html>
