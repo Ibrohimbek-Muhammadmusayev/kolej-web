@@ -1,5 +1,6 @@
 const API_URL = '/api';
 const DEFAULT_LANG = 'uz';
+const NO_IMAGE_PLACEHOLDER = "https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM=";
 
 class CMS {
     constructor() {
@@ -44,6 +45,23 @@ class CMS {
     get(obj, key) {
         if (!obj) return '';
         return obj[`${key}_${this.lang}`] || obj[`${key}_uz`] || obj[key] || '';
+    }
+
+    getImageUrl(url) {
+        if (!url || 
+            (typeof url === 'string' && (
+                url.includes('picsum.photos') || 
+                url.includes('randomuser.me') || 
+                url.includes('via.placeholder.com') ||
+                url.includes('placeholder.com')
+            ))
+        ) {
+            return NO_IMAGE_PLACEHOLDER;
+        }
+        if (!url.startsWith('http') && !url.startsWith('/')) {
+            return `${API_URL.replace('/api', '')}/uploads/${url}`;
+        }
+        return url;
     }
 
     // Helper for safe fetching
@@ -106,14 +124,30 @@ class CMS {
         if (heroTitle) heroTitle.textContent = this.get(this.settings, 'hero_title');
 
         // Footer Contact Info
-        const footerAddr = document.querySelector('[data-i18n="footer-address"]');
-        if (footerAddr) footerAddr.innerHTML = this.get(this.settings, 'contact_address');
+        const footerAddr = document.querySelectorAll('[data-i18n="footer-address"]');
+        footerAddr.forEach(el => {
+            el.innerHTML = this.get(this.settings, 'contact_address');
+        });
 
-        const footerPhone = document.querySelector('[data-i18n="footer-phone"]');
-        if (footerPhone && this.settings.contact_phone) footerPhone.textContent = this.settings.contact_phone;
+        const footerPhone = document.querySelectorAll('[data-i18n="footer-phone"], [data-i18n="contact-phone"]');
+        footerPhone.forEach(el => {
+            if (this.settings.contact_phone) el.textContent = this.settings.contact_phone;
+        });
 
-        const footerEmail = document.querySelector('[data-i18n="footer-email"]');
-        if (footerEmail && this.settings.contact_email) footerEmail.textContent = this.settings.contact_email;
+        const footerEmail = document.querySelectorAll('[data-i18n="footer-email"], [data-i18n="contact-email"]');
+        footerEmail.forEach(el => {
+            if (this.settings.contact_email) el.textContent = this.settings.contact_email;
+        });
+
+        // Social Links
+        const facebookLink = document.getElementById('social-facebook');
+        if (facebookLink && this.settings.facebook_url) facebookLink.href = this.settings.facebook_url;
+
+        const instagramLink = document.getElementById('social-instagram');
+        if (instagramLink && this.settings.instagram_url) instagramLink.href = this.settings.instagram_url;
+
+        const telegramLink = document.getElementById('social-telegram');
+        if (telegramLink && this.settings.telegram_url) telegramLink.href = this.settings.telegram_url;
     }
 
     // --- HOME PAGE ---
@@ -138,7 +172,7 @@ class CMS {
                 // Fallback to default if no slides
                 container.innerHTML = `
                     <div class="carousel-slide absolute w-full h-full bg-cover bg-center transition-all duration-300 opacity-100 filter brightness-75 dark:brightness-50"
-                        style="background-image: url('https://picsum.photos/1920/1080?random=1')"></div>
+                        style="background-image: url('${NO_IMAGE_PLACEHOLDER}')"></div>
                 `;
                 return;
             }
@@ -150,25 +184,45 @@ class CMS {
                 if (slide.media_type === 'video') {
                     mediaHtml = `
                         <video class="w-full h-full object-cover" ${isActive ? 'autoplay' : ''} muted loop playsinline>
-                            <source src="${slide.media_url}" type="video/mp4">
+                            <source src="${this.getImageUrl(slide.media_url)}" type="video/mp4">
                         </video>
                     `;
                 } else {
-                    mediaHtml = `<img src="${slide.media_url}" class="w-full h-full object-cover">`;
+                    mediaHtml = `<img src="${this.getImageUrl(slide.media_url)}" class="w-full h-full object-cover">`;
                 }
 
-                return `
-                    <div class="carousel-slide absolute w-full h-full transition-all duration-500 ease-in-out ${isActive ? 'opacity-100 z-10' : 'opacity-0 z-0'} filter brightness-75 dark:brightness-50">
-                        ${mediaHtml}
-                        <div class="absolute bottom-20 left-0 w-full p-8 md:p-16 text-center text-white z-20">
-                            <h2 class="text-4xl md:text-6xl font-bold mb-4 drop-shadow-lg">${slide.title || ''}</h2>
-                            <p class="text-lg md:text-2xl drop-shadow-md max-w-3xl mx-auto">${slide.description || ''}</p>
+                const title = this.get(slide, 'title');
+                const description = this.get(slide, 'description');
+                const hasContent = !!title || !!description;
+                const contentHtml = hasContent ? `
+                        <div class="absolute inset-0 bg-blue-900/40 z-10"></div>
+                        <div class="absolute inset-0 flex items-center justify-center z-20">
+                            <div class="container mx-auto px-4 text-center">
+                                <div class="max-w-4xl mx-auto space-y-6">
+                                    <h2 class="text-4xl md:text-7xl font-bold text-white leading-tight animate-slideUp">
+                                        ${title}
+                                    </h2>
+                                    ${description ? `
+                                    <p class="text-xl md:text-2xl text-blue-50 animate-slideUp delay-100 line-clamp-3">
+                                        ${description}
+                                    </p>
+                                    ` : ''}
+                                </div>
+                            </div>
                         </div>
+                ` : '';
+
+                return `
+                    <div class="carousel-slide absolute inset-0 transition-all duration-1000 ease-in-out ${isActive ? 'opacity-100 z-10' : 'opacity-0 z-0'}">
+                        <div class="absolute inset-0 bg-black/20 z-0"></div>
+                        ${mediaHtml}
+                        ${contentHtml}
                     </div>
                 `;
             }).join('');
 
-            this.initHeroCarousel(container);
+            const hasAnyText = slides.some(s => !!this.get(s, 'title') || !!this.get(s, 'description'));
+            this.initHeroCarousel(container, hasAnyText);
 
         } catch (error) {
             console.error('Hero Load Error:', error);
@@ -180,13 +234,26 @@ class CMS {
         }
     }
 
-    initHeroCarousel(container) {
+    initHeroCarousel(container, hasAnyText) {
         const slides = container.querySelectorAll('.carousel-slide');
-        if (slides.length < 2) return;
+        if (slides.length < 1) return;
 
         let currentSlide = 0;
         const totalSlides = slides.length;
         let timer;
+
+        const progressEl = document.getElementById('carousel-progress');
+        const counterEl = document.getElementById('carousel-counter');
+
+        const updateIndicators = (index) => {
+            if (progressEl) {
+                const percent = ((index + 1) / totalSlides) * 100;
+                progressEl.style.width = `${percent}%`;
+            }
+            if (counterEl) {
+                counterEl.textContent = `${(index + 1).toString().padStart(2, '0')}/${totalSlides.toString().padStart(2, '0')}`;
+            }
+        };
 
         const showSlide = (index) => {
             slides.forEach((slide, i) => {
@@ -204,6 +271,7 @@ class CMS {
                     }
                 }
             });
+            updateIndicators(index);
         };
 
         const nextSlide = () => {
@@ -215,6 +283,9 @@ class CMS {
             currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
             showSlide(currentSlide);
         };
+
+        // Initial indicators
+        updateIndicators(0);
 
         // Attach controls from index.html (outside the track)
         const nextBtn = document.getElementById('nextBtn');
@@ -235,13 +306,25 @@ class CMS {
             };
         }
 
+        // Hide controls if only 1 slide
+        if (totalSlides <= 1) {
+            if (nextBtn) nextBtn.style.display = 'none';
+            if (prevBtn) prevBtn.style.display = 'none';
+            const indicators = document.getElementById('carousel-indicators');
+            if (indicators) indicators.style.display = 'none';
+        }
+
         const resetTimer = () => {
-            clearInterval(timer);
-            timer = setInterval(nextSlide, 7000);
+            if (totalSlides > 1 && hasAnyText) {
+                clearInterval(timer);
+                timer = setInterval(nextSlide, 7000);
+            }
         };
 
-        // Start Auto Play
-        timer = setInterval(nextSlide, 7000);
+        // Start Auto Play only if more than 1 slide and at least one has text
+        if (totalSlides > 1 && hasAnyText) {
+            timer = setInterval(nextSlide, 7000);
+        }
     }
 
     async fetchLatestNews() {
@@ -259,17 +342,11 @@ class CMS {
 
             // Render Slides
             container.innerHTML = news.map((item, index) => {
-                // Determine image URL
-                let imgUrl = item.image_url;
-                if (!imgUrl) {
-                    imgUrl = 'https://picsum.photos/1200/600';
-                } else if (!imgUrl.startsWith('http') && !imgUrl.startsWith('/')) {
-                    imgUrl = `${API_URL.replace('/api', '')}/uploads/${imgUrl}`;
-                }
+                const imgUrl = this.getImageUrl(item.image_url);
 
                 return `
                 <div class="news-slide absolute top-0 left-0 w-full h-full flex items-center justify-center bg-gray-900 transition-opacity duration-500 ease-in-out ${index === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0'}">
-                    <img src="${imgUrl}" class="absolute w-full h-full object-cover opacity-60">
+                    <img src="${imgUrl}" onerror="this.src='${NO_IMAGE_PLACEHOLDER}'" class="absolute w-full h-full object-cover opacity-60">
                     <div class="relative z-10 text-center text-white px-4 max-w-4xl">
                         <span class="inline-block px-3 py-1 bg-blue-600 rounded-full text-sm font-semibold mb-4 animate-fadeIn">
                              ${item.category || 'Yangilik'}
@@ -367,28 +444,17 @@ class CMS {
             fields = fields.slice(0, 3); // Take 3
 
             container.innerHTML = fields.map(field => {
-                let imgUrl = field.image_url || field.icon_url;
-                if (!imgUrl) {
-                    imgUrl = 'https://picsum.photos/800/600';
-                } else if (!imgUrl.startsWith('http') && !imgUrl.startsWith('/')) {
-                    imgUrl = `${API_URL.replace('/api', '')}/uploads/${imgUrl}`;
-                }
-
-                let iconUrl = field.icon_url;
-                if (!iconUrl) {
-                    iconUrl = 'https://picsum.photos/400/300';
-                } else if (!iconUrl.startsWith('http') && !iconUrl.startsWith('/')) {
-                    iconUrl = `${API_URL.replace('/api', '')}/uploads/${iconUrl}`;
-                }
+                const imgUrl = this.getImageUrl(field.image_url || field.icon_url);
+                const iconUrl = this.getImageUrl(field.icon_url);
 
                 return `
                  <div class="group relative bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden hover:-translate-y-2 transition-all duration-300">
                     <div class="h-48 overflow-hidden">
-                        <img src="${imgUrl}" alt="${this.get(field, 'title')}" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500">
+                        <img src="${imgUrl}" onerror="this.src='${NO_IMAGE_PLACEHOLDER}'" alt="${this.get(field, 'title')}" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500">
                     </div>
                     <div class="p-8">
                         <div class="absolute top-4 right-4 bg-blue-100 dark:bg-blue-900 p-2 rounded-lg">
-                           <img src="${field.icon_url}" class="w-8 h-8 rounded-full"> 
+                           <img src="${iconUrl}" onerror="this.src='${NO_IMAGE_PLACEHOLDER}'" class="w-8 h-8 rounded-full"> 
                         </div>
                         <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-blue-600 transition-colors">
                             ${this.get(field, 'title')}
@@ -411,70 +477,108 @@ class CMS {
     }
 
     async fetchStats() {
+        const container = document.getElementById('home-achievements-container');
         try {
             const stats = await this.safeFetch(`${API_URL}/stats`);
-
-            // Map known stats to IDs
-            const mapping = {
-                'students_count': 'stat-students',
+            
+            // 1. Update Small Stats at the top (if they exist)
+            const smallStatsMapping = {
+                'stat_total': 'stat-students',
                 'fields_count': 'stat-fields',
-                'entrants_percent': ['stat-uni', 'stat-uni-achieve'],
-                'soft_eng_percent': 'stat-soft',
-                'net_percent': 'stat-net',
-                'account_percent': 'stat-account'
+                'stat_uni_top': 'stat-uni'
             };
 
             stats.forEach(s => {
-                const target = mapping[s.key];
-                const ids = Array.isArray(target) ? target : (target ? [target] : []);
-
-                ids.forEach(id => {
-                    const el = document.getElementById(id);
+                const targetId = smallStatsMapping[s.key];
+                if (targetId) {
+                    const el = document.getElementById(targetId);
                     if (el) {
-                        const numericValue = parseFloat(String(s.value).replace(/[^0-9.]/g, ''));
-                        if (!isNaN(numericValue)) {
-                            el.setAttribute('data-target', numericValue);
-
-                            if (el.classList.contains('started') || el.textContent !== '0') {
-                                // If the intersection observer already ran, restart it for the new dynamic number
-                                el.classList.remove('started', 'finished');
-                                el.textContent = '0'; // reset visually
-
-                                // Manually fire animation logic for just this element since observer already fired
-                                const duration = 2000;
-                                const increment = numericValue / (duration / 16);
-                                let current = 0;
-
-                                const updateCounter = () => {
-                                    current += increment;
-                                    if (current < numericValue) {
-                                        el.textContent = Math.ceil(current);
-                                        requestAnimationFrame(updateCounter);
-                                    } else {
-                                        el.textContent = numericValue;
-                                        el.classList.add('finished');
-                                    }
-                                };
-                                updateCounter();
-                            }
-                            const container = el.closest('.mb-8');
-                            if (container) {
-                                const bar = container.querySelector('.bar-chart-fill');
-                                if (bar) {
-                                    setTimeout(() => {
-                                        bar.setAttribute('data-width', numericValue + '%');
-                                        if (bar.classList.contains('started')) {
-                                            bar.style.width = numericValue + '%';
-                                        }
-                                    }, 100);
-                                }
-                            }
+                        const numeric = parseFloat(String(s.value).replace(/[^0-9.]/g, '')) || 0;
+                        el.setAttribute('data-target', numeric);
+                        
+                        // If already started/finished by script.js, force update the text
+                        if (el.classList.contains('started') || el.classList.contains('finished')) {
+                            el.textContent = numeric;
+                        }
+                        
+                        // Also update the label text if available in DB
+                        const labelEl = el.closest('div').querySelector('[data-i18n]');
+                        if (labelEl) {
+                            labelEl.textContent = this.get(s, 'label');
+                            // Remove data-i18n to prevent script.js from overwriting it later
+                            labelEl.removeAttribute('data-i18n');
                         }
                     }
-                });
+                }
             });
+
+            // 2. Render Main Achievements Section
+            if (container) {
+                const activeAchievements = stats
+                    .filter(s => s.section === 'home_achievements' && s.isActive)
+                    .sort((a, b) => (a.order || 0) - (b.order || 0));
+
+                if (activeAchievements.length === 0) {
+                    container.innerHTML = '';
+                    return;
+                }
+
+                container.innerHTML = activeAchievements.map(s => {
+                    const numericValue = parseFloat(String(s.value).replace(/[^0-9.]/g, '')) || 0;
+                    const isPercentage = String(s.value).includes('%');
+                    const suffix = isPercentage ? '%' : (String(s.value).includes('+') ? '+' : '');
+                    
+                    // Logic for bar width: if it's percentage use value, else use 100 or custom
+                    const barWidth = isPercentage ? numericValue : 100;
+
+                    return `
+                        <div class="mb-8">
+                            <div class="flex justify-between items-end mb-2">
+                                <span class="text-xl font-bold text-blue-200">${this.get(s, 'label')}</span>
+                                <span class="text-2xl font-bold"><span class="count-up" data-target="${numericValue}">0</span>${suffix}</span>
+                            </div>
+                            <div class="w-full bg-blue-900/50 rounded-full h-4 border border-blue-500/30 overflow-hidden">
+                                <div class="bg-gradient-to-r from-blue-400 to-blue-600 h-4 rounded-full bar-chart-fill transition-all duration-1000 ease-out w-0"
+                                    style="width: 0%" data-width="${barWidth}%"></div>
+                            </div>
+                            <p class="text-sm text-blue-200/70 mt-2 text-left">${this.get(s, 'description')}</p>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            // Trigger animations (from script.js observer)
+            if (typeof window.statsObserver !== 'undefined') {
+                document.querySelectorAll('.count-up').forEach(el => window.statsObserver.observe(el.closest('section') || el.parentElement));
+            } else {
+                // Fallback: trigger manually if observer not ready
+                setTimeout(() => {
+                    document.querySelectorAll('.count-up:not(.started)').forEach(el => {
+                        const target = +el.getAttribute('data-target');
+                        if (target > 0) {
+                            // Simple animation
+                            let curr = 0;
+                            const step = target / 50;
+                            const iter = setInterval(() => {
+                                curr += step;
+                                if (curr >= target) {
+                                    el.textContent = target;
+                                    clearInterval(iter);
+                                } else {
+                                    el.textContent = Math.ceil(curr);
+                                }
+                            }, 30);
+                        }
+                    });
+                    document.querySelectorAll('.bar-chart-fill:not(.started)').forEach(bar => {
+                        bar.style.width = bar.getAttribute('data-width');
+                    });
+                }, 500);
+            }
+
         } catch (e) {
             console.error('Stats loading failed:', e);
+            if (container) container.innerHTML = '';
         }
     }
 
@@ -486,7 +590,7 @@ class CMS {
 
             container.innerHTML = students.map(s => `
                 <div class="min-w-[300px] md:min-w-[350px] bg-gray-50 dark:bg-gray-700 rounded-2xl p-6 shadow-lg snap-center text-center transform hover:-translate-y-2 transition-transform duration-300 border border-gray-100 dark:border-gray-600">
-                    <img src="${s.image_url || 'https://randomuser.me/api/portraits/men/1.jpg'}" alt="${this.get(s, 'full_name')}" class="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-blue-500 object-cover">
+                    <img src="${this.getImageUrl(s.image_url)}" onerror="this.src='${NO_IMAGE_PLACEHOLDER}'" alt="${this.get(s, 'full_name')}" class="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-blue-500 object-cover">
                     <h3 class="text-xl font-bold text-gray-900 dark:text-white">${this.get(s, 'full_name')}</h3>
                     <p class="text-blue-600 dark:text-blue-400 mb-2 font-medium">${this.get(s, 'field')}</p>
                     <p class="text-gray-600 dark:text-gray-300 text-sm italic">"${this.get(s, 'achievement')}"</p>
@@ -501,18 +605,22 @@ class CMS {
         if (!container) return;
         try {
             const fields = await this.safeFetch(`${API_URL}/fields?random=true`);
-            container.innerHTML = fields.map(field => `
+            container.innerHTML = fields.map(field => {
+                const imgUrl = this.getImageUrl(field.image_url || field.icon_url);
+
+                return `
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden cursor-pointer transform hover:scale-105 transition-transform duration-300 relative h-full flex flex-col"
                     onclick="window.location.href='field-details.html?slug=${field.slug}'">
                     ${field.is_new ? '<span class="absolute top-4 right-4 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full animate-pulse">YANGI</span>' : ''}
-                    <img src="${field.image_url || field.icon_url}" alt="${this.get(field, 'title')}" class="w-full h-48 object-cover">
+                    <img src="${imgUrl}" onerror="this.src='${NO_IMAGE_PLACEHOLDER}'" alt="${this.get(field, 'title')}" class="w-full h-48 object-cover">
                     <div class="p-6 flex-grow flex flex-col">
                         <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-2">${this.get(field, 'title')}</h3>
                         <p class="text-gray-700 dark:text-gray-300 line-clamp-3 mb-4 flex-grow">${this.get(field, 'description')}</p>
                         <a href="field-details.html?slug=${field.slug}" class="text-blue-600 hover:text-blue-800 font-bold mt-auto inline-block">Batafsil &rarr;</a>
                     </div>
                 </div>
-            `).join('');
+            `;
+            }).join('');
         } catch (e) {
             UI.showToast("Sohalar ro'yxatini yuklab bo'lmadi", 'error');
         }
@@ -527,9 +635,11 @@ class CMS {
         try {
             const field = await this.safeFetch(`${API_URL}/fields/${slug}`);
 
+            const imgUrl = this.getImageUrl(field.image_url || field.icon_url);
+
             container.innerHTML = `
                 <div class="relative h-64 md:h-96">
-                    <img src="${field.image_url || field.icon_url}" alt="${this.get(field, 'title')}" class="w-full h-full object-cover">
+                    <img src="${imgUrl}" onerror="this.src='${NO_IMAGE_PLACEHOLDER}'" alt="${this.get(field, 'title')}" class="w-full h-full object-cover">
                     <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
                         <div class="text-center">
                             <h1 class="text-4xl md:text-5xl font-bold text-white px-4 mb-4">${this.get(field, 'title')}</h1>
@@ -579,10 +689,13 @@ class CMS {
             const data = await this.safeFetch(`${API_URL}/news`);
             const news = data.rows || data;
 
-            container.innerHTML = news.map(item => `
+            container.innerHTML = news.map(item => {
+                const imgUrl = this.getImageUrl(item.image_url);
+
+                return `
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden group hover:shadow-2xl transition-all duration-300">
                     <div class="relative overflow-hidden h-48">
-                        <img src="${item.image_url || 'https://picsum.photos/400/300'}" alt="${this.get(item, 'title')}"
+                        <img src="${imgUrl}" onerror="this.src='${NO_IMAGE_PLACEHOLDER}'" alt="${this.get(item, 'title')}"
                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                         <div class="absolute top-0 right-0 bg-blue-600 text-white px-3 py-1 m-4 rounded-full text-xs font-bold">
                             ${new Date(item.date).toLocaleDateString()}
@@ -604,7 +717,8 @@ class CMS {
                         </a>
                     </div>
                 </div>
-            `).join('');
+            `;
+            }).join('');
         } catch (e) {
             container.innerHTML = '<div class="col-span-full text-center text-red-500">Yangiliklarni yuklashda xatolik.</div>';
             UI.showToast("Yangiliklarni yuklashda xatolik", 'error');
@@ -619,11 +733,11 @@ class CMS {
             const team = await this.safeFetch(`${API_URL}/team`);
 
             container.innerHTML = team.map(member => {
-                const defaultImg = "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23cbd5e1'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E";
+                const imgUrl = this.getImageUrl(member.image_url);
                 return `
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden text-center group flex flex-col items-center">
                     <div class="w-full h-64 bg-gray-100 dark:bg-gray-700 flex items-center justify-center overflow-hidden">
-                        <img src="${member.image_url || defaultImg}" onerror="this.onerror=null; this.src='${defaultImg}';" alt="${this.get(member, 'full_name')}"
+                        <img src="${imgUrl}" onerror="this.src='${NO_IMAGE_PLACEHOLDER}'" alt="${this.get(member, 'full_name')}"
                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                     </div>
                     <div class="p-6 w-full">
@@ -633,7 +747,8 @@ class CMS {
                         <p class="text-blue-600 dark:text-blue-400 font-medium">${this.get(member, 'role')}</p>
                     </div>
                 </div>
-            `}).join('');
+            `;
+            }).join('');
         } catch (e) {
             container.innerHTML = '<div class="col-span-full text-center text-red-500">Ma\'lumotlarni yuklashda xatolik.</div>';
             UI.showToast("Jamoa ma'lumotlarini yuklashda xatolik", 'error');
@@ -645,6 +760,51 @@ class CMS {
         const mapFrame = document.querySelector('.map-container iframe');
         if (mapFrame && this.settings.map_url) {
             mapFrame.src = this.settings.map_url;
+        }
+
+        // Setup form submission
+        const form = document.getElementById('contact-form');
+        if (form) {
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const submitBtn = form.querySelector('button[type="submit"]');
+                const originalBtnText = submitBtn.innerHTML;
+                
+                try {
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = 'Yuborilmoqda...';
+
+                    const data = {
+                        fullName: document.getElementById('contact-name').value,
+                        phone: document.getElementById('contact-phone').value,
+                        message: document.getElementById('contact-message').value
+                    };
+
+                    await this.safeFetch(`${API_URL}/applications`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    });
+
+                    // Success
+                    const successMsg = this.lang === 'uz' ? 'Rahmat! Xabaringiz qabul qilindi.' : 
+                                      this.lang === 'ru' ? 'Спасибо! Ваше сообщение принято.' : 
+                                      'Thank you! Your message has been received.';
+                    
+                    alert(successMsg); // Using alert for simplicity as UI.showToast might vary in implementation
+                    form.reset();
+
+                } catch (e) {
+                    console.error(e);
+                    const errorMsg = this.lang === 'uz' ? 'Xatolik yuz berdi. Iltimos qayta urinib ko\'ring.' : 
+                                    this.lang === 'ru' ? 'Произошла ошибка. Пожалуйста, попробуйте еще раз.' : 
+                                    'An error occurred. Please try again.';
+                    alert(errorMsg);
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalBtnText;
+                }
+            });
         }
     }
 }

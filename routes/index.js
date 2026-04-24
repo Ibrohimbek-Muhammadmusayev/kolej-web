@@ -45,6 +45,7 @@ router.delete('/fields/:id', authMiddleware, fieldController.deleteField);
 router.post('/applications', applicationController.createApplication);
 router.get('/applications', authMiddleware, applicationController.getAllApplications);
 router.put('/applications/:id/status', authMiddleware, applicationController.updateApplicationStatus);
+router.delete('/applications/:id', authMiddleware, applicationController.deleteApplication);
 
 // --- SETTINGS ---
 router.get('/settings', settingsController.getSettings);
@@ -69,7 +70,9 @@ router.delete('/students/:id', authMiddleware, studentController.deleteStudent);
 
 // --- STATS ---
 router.get('/stats', statsController.getAllStats);
+router.post('/stats', authMiddleware, statsController.createStat);
 router.put('/stats', authMiddleware, statsController.updateStats);
+router.delete('/stats/:id', authMiddleware, statsController.deleteStat);
 
 // --- HERO CAROUSEL ---
 const heroController = require('../controllers/heroController');

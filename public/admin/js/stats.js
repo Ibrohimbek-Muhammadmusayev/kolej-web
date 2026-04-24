@@ -1,15 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
     loadStats();
-    document.getElementById('stats-form').addEventListener('submit', handleSave);
+    document.getElementById('stat-form').addEventListener('submit', handleSave);
 });
 
 let statsData = [];
 
 // Section Labels mapping
 const SECTION_TITLES = {
-    'home_hero': '🏠 Bosh Sahifa: Yuqori qism (Hero)',
-    'home_fields': '🎓 Bosh Sahifa: Sohalar',
-    'home_achievements': '🏆 Bosh Sahifa: Yutuqlar va Statistika',
+    'home_top': '🔝 Asosiy Ko\'rsatkichlar (Hero Stats)',
+    'home_achievements': '🏆 "Raqamli Yutuqlarimiz" Bo\'limi',
     'other': 'Boshqa'
 };
 
@@ -25,11 +24,6 @@ async function loadStats() {
         }
         statsData = await res.json();
 
-        if (statsData.length === 0) {
-            container.innerHTML = admin.getEmptyStateHtml("Statistik ko'rsatkichlar topilmadi", null, false);
-            return;
-        }
-
         renderStats(statsData);
 
     } catch (e) {
@@ -42,6 +36,9 @@ function renderStats(stats) {
     const container = document.getElementById('stats-container');
     container.innerHTML = '';
 
+    // Sections in specific order
+    const sectionOrder = ['home_top', 'home_achievements', 'other'];
+    
     // Group by section
     const groups = {};
     stats.forEach(stat => {
@@ -50,41 +47,73 @@ function renderStats(stats) {
         groups[section].push(stat);
     });
 
-    // Render groups
-    Object.keys(groups).forEach(section => {
+    sectionOrder.forEach(section => {
+        if (!groups[section]) return;
+
         const sectionTitle = SECTION_TITLES[section] || section;
         const items = groups[section];
+        const isHero = section === 'home_top';
 
         const sectionHtml = `
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-6 hover:shadow-md transition-shadow">
-                <div class="bg-gradient-to-r from-gray-50 to-white px-6 py-5 border-b border-gray-100 flex items-center">
-                    <h2 class="text-xl font-bold text-gray-800 flex items-center tracking-tight">
-                        ${sectionTitle}
-                    </h2>
+            <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden mb-10">
+                <div class="bg-gray-50 px-8 py-5 border-b border-gray-100 flex justify-between items-center">
+                    <h2 class="text-xl font-bold text-gray-800">${sectionTitle}</h2>
+                    ${isHero ? `
+                        <span class="text-xs font-bold text-blue-500 bg-blue-50 px-3 py-1 rounded-full uppercase tracking-wider">Faqat tahrirlash</span>
+                    ` : `
+                        <span class="text-xs font-bold text-emerald-500 bg-emerald-50 px-3 py-1 rounded-full uppercase tracking-wider">To'liq boshqarish</span>
+                    `}
                 </div>
-                <div class="p-6 sm:p-8 grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-                    ${items.map(item => `
-                        <div class="relative group">
-                            <label class="block text-sm font-bold text-gray-700 mb-2 transition-colors group-focus-within:text-blue-600">
-                                ${item.label_uz || item.key}
-                            </label>
-                            <div class="relative">
-                                <input type="text" 
-                                    data-id="${item.id}" 
-                                    data-key="${item.key}"
-                                    value="${item.value}" 
-                                    ${item.key === 'fields_count' ? 'disabled' : ''}
-                                    class="w-full px-4 py-3.5 rounded-xl border-transparent focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-100 transition-all font-medium text-gray-800 ${item.key === 'fields_count' ? 'bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200 shadow-inner' : 'bg-gray-50/80 border border-gray-200 hover:border-gray-300 shadow-sm'}"
-                                >
-                            </div>
-                            <p class="text-xs text-gray-500 mt-2.5 flex items-start leading-relaxed">
-                                <span class="mr-1.5 text-blue-400 mt-0.5">
-                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                </span> 
-                                ${item.description_uz || 'Tavsif qoldirilmagan'}
-                            </p>
-                        </div>
-                    `).join('')}
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="text-xs uppercase text-gray-400 font-bold border-b border-gray-50 bg-gray-50/30">
+                                <th class="px-8 py-4 w-20 text-center">T/r</th>
+                                <th class="px-8 py-4">Nomi (UZ)</th>
+                                <th class="px-8 py-4">Qiymat</th>
+                                ${!isHero ? `<th class="px-8 py-4">Holati</th>` : ''}
+                                <th class="px-8 py-4 text-right">Amallar</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-50">
+                            ${items.sort((a,b) => a.order - b.order).map((item, index) => `
+                                <tr class="hover:bg-gray-50/50 transition-colors">
+                                    <td class="px-8 py-6 text-center font-mono text-sm text-gray-400">${item.order || (index+1)}</td>
+                                    <td class="px-8 py-6">
+                                        <div class="font-bold text-gray-800">${item.label_uz}</div>
+                                        ${!isHero ? `<div class="text-xs text-gray-400 mt-1">${item.key}</div>` : ''}
+                                    </td>
+                                    <td class="px-8 py-6">
+                                        <span class="px-4 py-2 rounded-xl font-black text-blue-700 bg-blue-50 border border-blue-100 shadow-sm">
+                                            ${item.value}
+                                        </span>
+                                    </td>
+                                    ${!isHero ? `
+                                    <td class="px-8 py-6">
+                                        <div class="flex items-center">
+                                            <div class="w-2 h-2 rounded-full mr-2 ${item.isActive ? 'bg-emerald-500 animate-pulse' : 'bg-gray-300'}"></div>
+                                            <span class="text-sm font-bold ${item.isActive ? 'text-emerald-600' : 'text-gray-400'}">
+                                                ${item.isActive ? 'Faol' : 'Nofaol'}
+                                            </span>
+                                        </div>
+                                    </td>
+                                    ` : ''}
+                                    <td class="px-8 py-6 text-right">
+                                        <div class="flex justify-end items-center space-x-2">
+                                            <button onclick="editStat(${item.id})" class="p-2.5 text-blue-600 hover:bg-blue-50 rounded-xl transition-all border border-transparent hover:border-blue-100 shadow-sm hover:shadow group" title="Tahrirlash">
+                                                <svg class="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                                            </button>
+                                            ${!isHero ? `
+                                                <button onclick="deleteStat(${item.id})" class="p-2.5 text-rose-600 hover:bg-rose-50 rounded-xl transition-all border border-transparent hover:border-rose-100 shadow-sm hover:shadow group" title="O'chirish">
+                                                    <svg class="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                                </button>
+                                            ` : ''}
+                                        </div>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         `;
@@ -92,50 +121,126 @@ function renderStats(stats) {
     });
 }
 
-async function handleSave(e) {
-    e.preventDefault();
-    const btn = e.target.querySelector('button[type="submit"]');
-    const msg = document.getElementById('message');
+function openModal(isEdit = false) {
+    const modal = document.getElementById('stat-modal');
+    const title = document.getElementById('modal-title');
+    const form = document.getElementById('stat-form');
 
-    btn.disabled = true;
-    btn.innerHTML = `
-        <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-        </svg>
-        Saqlanmoqda...
-    `;
+    if (!isEdit) {
+        form.reset();
+        document.getElementById('stat-id').value = '';
+        document.getElementById('stat-section').value = 'home_achievements';
+        document.getElementById('stat-key').disabled = false;
+        document.getElementById('stat-section').disabled = false;
+        title.innerText = 'Yangi Statistika Qo\'shish';
+    } else {
+        title.innerText = 'Statistikani Tahrirlash';
+    }
 
-    const inputs = document.querySelectorAll('#stats-container input:not([disabled])');
-    const updates = [];
+    modal.classList.remove('hidden');
 
-    inputs.forEach(input => {
-        updates.push({
-            id: input.getAttribute('data-id'),
-            value: input.value
-        });
+    // Toggle fields based on section
+    const section = document.getElementById('stat-section').value;
+    const isHero = section === 'home_top';
+    const fieldsToHide = document.querySelectorAll('.hero-hide');
+    fieldsToHide.forEach(f => {
+        if (isHero) f.classList.add('hidden');
+        else f.classList.remove('hidden');
     });
 
+    if (isHero) {
+        title.innerText = 'Qiymatni Ozgartirish';
+    }
+}
+
+function closeModal() {
+    document.getElementById('stat-modal').classList.add('hidden');
+}
+
+function editStat(id) {
+    const stat = statsData.find(s => s.id === id);
+    if (!stat) return;
+
+    document.getElementById('stat-id').value = stat.id;
+    document.getElementById('stat-key').value = stat.key;
+    document.getElementById('stat-value').value = stat.value;
+    document.getElementById('stat-label-uz').value = stat.label_uz;
+    document.getElementById('stat-label-ru').value = stat.label_ru;
+    document.getElementById('stat-label-en').value = stat.label_en;
+    document.getElementById('stat-desc-uz').value = stat.description_uz || '';
+    document.getElementById('stat-desc-ru').value = stat.description_ru || '';
+    document.getElementById('stat-desc-en').value = stat.description_en || '';
+    document.getElementById('stat-section').value = stat.section || 'home_achievements';
+    document.getElementById('stat-order').value = stat.order || 0;
+    document.getElementById('stat-active').checked = stat.isActive;
+
+    // Fixed stats shouldn't change key or section
+    const isHero = stat.section === 'home_top';
+    document.getElementById('stat-key').disabled = isHero;
+    document.getElementById('stat-section').disabled = isHero;
+
+    openModal(true);
+}
+
+async function handleSave(e) {
+    e.preventDefault();
+    const id = document.getElementById('stat-id').value;
+    const isEdit = id !== '';
+
+    const data = {
+        key: document.getElementById('stat-key').value,
+        value: document.getElementById('stat-value').value,
+        label_uz: document.getElementById('stat-label-uz').value,
+        label_ru: document.getElementById('stat-label-ru').value,
+        label_en: document.getElementById('stat-label-en').value,
+        description_uz: document.getElementById('stat-desc-uz').value,
+        description_ru: document.getElementById('stat-desc-ru').value,
+        description_en: document.getElementById('stat-desc-en').value,
+        section: document.getElementById('stat-section').value,
+        order: parseInt(document.getElementById('stat-order').value) || 0,
+        isActive: document.getElementById('stat-active').checked
+    };
+
     try {
-        const res = await admin.fetch('/stats', {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(updates)
-        });
+        let res;
+        if (isEdit) {
+            data.id = id;
+            res = await admin.fetch('/stats', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+        } else {
+            res = await admin.fetch('/stats', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+        }
 
         if (res && res.ok) {
-            msg.textContent = "Barcha o'zgarishlar saqlandi!";
-            msg.classList.remove('hidden');
-            setTimeout(() => msg.classList.add('hidden'), 3000);
+            closeModal();
             loadStats();
         }
     } catch (e) {
         console.error(e);
-    } finally {
-        btn.disabled = false;
-        btn.innerHTML = `
-            <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-            Saqlash
-        `;
+        alert('Xatolik yuz berdi');
+    }
+}
+
+async function deleteStat(id) {
+    if (!confirm('Ushbu statistikani o\'chirib tashlamoqchimisiz?')) return;
+
+    try {
+        const res = await admin.fetch(`/stats/${id}`, {
+            method: 'DELETE'
+        });
+
+        if (res && res.ok) {
+            loadStats();
+        }
+    } catch (e) {
+        console.error(e);
+        alert('O\'chirishda xatolik yuz berdi');
     }
 }

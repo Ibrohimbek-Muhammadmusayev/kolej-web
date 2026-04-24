@@ -239,8 +239,8 @@ const navHtml = `
 
             <p class="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mt-6 mb-2">Boshqaruv</p>
             <a href="applications.html" class="sidebar-link flex items-center px-3 py-3 rounded-lg text-sm ${window.location.pathname.includes('applications') ? 'active' : ''}">
-                <svg class="w-5 h-5 mr-3 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                Arizalar
+                <svg class="w-5 h-5 mr-3 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path></svg>
+                Xabarlar
             </a>
             
             <p class="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mt-6 mb-2">Tizim</p>
@@ -272,9 +272,9 @@ const navHtml = `
             
             <div class="flex items-center space-x-5">
                 <!-- Notifications (Visual) -->
-                <button class="relative text-gray-400 hover:text-gray-600 transition-colors">
+                <button id="nav-notifications" onclick="window.location.href='applications.html'" class="relative text-gray-400 hover:text-gray-600 transition-colors">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
-                    <span class="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white"></span>
+                    <span id="nav-notif-badge" class="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full border-2 border-white hidden flex items-center justify-center text-[7px] text-white font-bold"></span>
                 </button>
                 
                 <!-- Divider -->
@@ -358,7 +358,35 @@ function injectMainContent() {
 
 // Ensure the injection happens regardless of script load timing
 if (document.readyState === 'loading') {
-    window.addEventListener('DOMContentLoaded', injectMainContent);
+    window.addEventListener('DOMContentLoaded', () => {
+        injectMainContent();
+        updateNotificationBadge();
+        setInterval(updateNotificationBadge, 30000); // Check every 30 seconds
+    });
 } else {
     injectMainContent();
+    updateNotificationBadge();
+    setInterval(updateNotificationBadge, 30000);
+}
+
+async function updateNotificationBadge() {
+    try {
+        const res = await admin.fetch('/applications');
+        if (!res) return;
+        const apps = await res.json();
+        const newCount = apps.filter(a => a.status === 'new').length;
+        
+        const badge = document.getElementById('nav-notif-badge');
+        if (badge) {
+            if (newCount > 0) {
+                badge.classList.remove('hidden');
+                badge.textContent = newCount > 9 ? '9+' : newCount;
+                // Add a small pulse animation if it's new
+                badge.classList.add('animate-pulse');
+            } else {
+                badge.classList.add('hidden');
+                badge.classList.remove('animate-pulse');
+            }
+        }
+    } catch (e) { console.error("Notif fetch error:", e); }
 }

@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         container.innerHTML = students.map(student => `
             <div class="min-w-[300px] md:min-w-[350px] bg-gray-50 dark:bg-gray-700 rounded-2xl p-6 shadow-lg snap-center text-center transform hover:-translate-y-2 transition-transform duration-300 border border-gray-100 dark:border-gray-600">
-                <img src="${student.image_url || 'https://via.placeholder.com/150'}" alt="${student.full_name_uz}"
+                <img src="${student.image_url || 'https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM='}" alt="${student.full_name_uz}"
                     class="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-blue-500 object-cover">
                 <h3 class="text-xl font-bold text-gray-900 dark:text-white">${student.full_name_uz}</h3>
                 <p class="text-blue-600 dark:text-blue-400 mb-2 font-medium">${student.field_uz || ''}</p>

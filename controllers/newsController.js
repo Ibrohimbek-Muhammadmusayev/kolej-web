@@ -44,7 +44,6 @@ exports.createNews = async (req, res) => {
         if (req.files && req.files.length > 0) {
             const mediaPromises = req.files.map(file => {
                 const type = file.mimetype.startsWith('video') ? 'video' : 'image';
-                // Construct URL correctly
                 const src = `/uploads/${file.filename}`;
                 return db.NewsMedia.create({
                     newsId: news.id,

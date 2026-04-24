@@ -25,7 +25,7 @@
 @keyframes slideUp {
     from {
         opacity: 0;
-        transform: translateY(30px);
+        transform: translateY(50px);
     }
 
     to {
@@ -48,5 +48,18 @@
 
 /* Optional delay utility */
 .delay-100 {
-    animation-delay: 0.1s;
+    animation-delay: 0.2s;
+}
+
+.delay-200 {
+    animation-delay: 0.4s;
+}
+
+.delay-300 {
+    animation-delay: 0.6s;
+}
+
+.vertical-text {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
 }

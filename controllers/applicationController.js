@@ -2,6 +2,7 @@ const db = require('../models');
 
 exports.createApplication = async (req, res) => {
     try {
+        console.log('Received application/message:', req.body);
         // Simple mapping from form fields (hyphenated) to model (camelCase) if needed
         const { "full-name": fullName, phone, dob, passport, address, education, "field-id": fieldId } = req.body;
 
@@ -13,7 +14,8 @@ exports.createApplication = async (req, res) => {
             passport: passport || req.body.passport,
             address: address || req.body.address,
             education: education || req.body.education,
-            fieldId: fieldId || req.body.fieldId
+            fieldId: fieldId || req.body.fieldId,
+            message: req.body.message
         };
 
         const application = await db.Application.create(appData);
@@ -38,6 +40,15 @@ exports.updateApplicationStatus = async (req, res) => {
         const { status } = req.body;
         await db.Application.update({ status }, { where: { id: req.params.id } });
         res.json({ message: 'Status updated' });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+exports.deleteApplication = async (req, res) => {
+    try {
+        await db.Application.destroy({ where: { id: req.params.id } });
+        res.json({ message: 'Deleted successfully' });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

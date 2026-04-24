@@ -1,23 +1,14 @@
-<!DOCTYPE html>
-<html lang="uz" class="scroll-smooth">
+import os
+import re
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quva tumani Politexnikomi - Biz haqimizda</title>
-    <link rel="stylesheet" href="style.css" />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-        }
-    </script>
-    <script src="loader.js"></script>
-</head>
+html_files = [
+    'index.html', 'about.html', 'contact.html', 'news.html',
+    'news-details.html', 'sohalar.html', 'field-details.html', 'students.html'
+]
 
-<body class="bg-white dark:bg-gray-900 transition-colors duration-300">
-    <header>
-        <nav class="fixed top-0 left-0 right-0 bg-blue-900/80 backdrop-blur-md dark:bg-gray-800/80 p-6 z-50 transition-all duration-300">
+def get_header_template(page_key):
+    template = """    <header>
+        <nav class="fixed top-0 left-0 right-0 bg-blue-900/80 backdrop-blur-md dark:bg-gray-800/80 p-6 z-30 transition-all duration-300">
             <div class="container mx-auto flex justify-between items-center">
                 <a href="/" class="text-white text-xl font-bold flex items-center">
                     <img id="site-logo" src="images/logo.png" alt="Quva tumani Politexnikumi Logo" class="h-10 mr-3">
@@ -27,12 +18,12 @@
                     <!-- Menu for desktop -->
                     <div class="hidden md:flex items-center space-x-6">
                         <ul class="hidden lg:flex items-center space-x-6">
-                            <li><a href="/" class="text-white hover:text-blue-300 transition-colors duration-300" data-i18n="nav-home">Bosh sahifa</a></li>
-                            <li><a href="sohalar.html" class="text-white hover:text-blue-300 transition-colors duration-300" data-i18n="nav-fields">Yo'nalishlar</a></li>
-                            <li><a href="about.html" class="text-blue-400 font-bold transition-colors duration-300" data-i18n="nav-about">Biz haqimizda</a></li>
-                            <li><a href="students.html" class="text-white hover:text-blue-300 transition-colors duration-300" data-i18n="nav-students">O'quvchilar uchun</a></li>
-                            <li><a href="news.html" class="text-white hover:text-blue-300 transition-colors duration-300" data-i18n="nav-news">Yangiliklar</a></li>
-                            <li><a href="contact.html" class="text-white hover:text-blue-300 transition-colors duration-300" data-i18n="nav-contact">Aloqa</a></li>
+                            <li><a href="/" class="__CLASS_HOME__" data-i18n="nav-home">Bosh sahifa</a></li>
+                            <li><a href="sohalar.html" class="__CLASS_SOHALAR__" data-i18n="nav-fields">Yo'nalishlar</a></li>
+                            <li><a href="about.html" class="__CLASS_ABOUT__" data-i18n="nav-about">Biz haqimizda</a></li>
+                            <li><a href="students.html" class="__CLASS_STUDENTS__" data-i18n="nav-students">O'quvchilar uchun</a></li>
+                            <li><a href="news.html" class="__CLASS_NEWS__" data-i18n="nav-news">Yangiliklar</a></li>
+                            <li><a href="contact.html" class="__CLASS_CONTACT__" data-i18n="nav-contact">Aloqa</a></li>
                         </ul>
                         <!-- Controls -->
                         <div class="flex items-center space-x-4">
@@ -65,12 +56,12 @@
             <!-- Mobile menu -->
             <div id="mobile-menu" class="hidden lg:hidden">
                 <ul class="mt-4 space-y-2">
-                    <li><a href="/" class="block text-white hover:text-blue-300 transition-colors duration-300" data-i18n="nav-home">Bosh sahifa</a></li>
-                    <li><a href="sohalar.html" class="block text-white hover:text-blue-300 transition-colors duration-300" data-i18n="nav-fields">Yo'nalishlar</a></li>
-                    <li><a href="about.html" class="block text-blue-400 font-bold transition-colors duration-300" data-i18n="nav-about">Biz haqimizda</a></li>
-                    <li><a href="students.html" class="block text-white hover:text-blue-300 transition-colors duration-300" data-i18n="nav-students">O'quvchilar uchun</a></li>
-                    <li><a href="news.html" class="block text-white hover:text-blue-300 transition-colors duration-300" data-i18n="nav-news">Yangiliklar</a></li>
-                    <li><a href="contact.html" class="block text-white hover:text-blue-300 transition-colors duration-300" data-i18n="nav-contact">Aloqa</a></li>
+                    <li><a href="/" class="__CLASS_HOME_MOBILE__" data-i18n="nav-home">Bosh sahifa</a></li>
+                    <li><a href="sohalar.html" class="__CLASS_SOHALAR_MOBILE__" data-i18n="nav-fields">Yo'nalishlar</a></li>
+                    <li><a href="about.html" class="__CLASS_ABOUT_MOBILE__" data-i18n="nav-about">Biz haqimizda</a></li>
+                    <li><a href="students.html" class="__CLASS_STUDENTS_MOBILE__" data-i18n="nav-students">O'quvchilar uchun</a></li>
+                    <li><a href="news.html" class="__CLASS_NEWS_MOBILE__" data-i18n="nav-news">Yangiliklar</a></li>
+                    <li><a href="contact.html" class="__CLASS_CONTACT_MOBILE__" data-i18n="nav-contact">Aloqa</a></li>
                 </ul>
                 <!-- Controls for mobile -->
                 <div class="flex items-center space-x-4 mt-4 md:hidden">
@@ -91,94 +82,23 @@
                 </div>
             </div>
         </nav>
-    </header>
+    </header>"""
 
-<main class="pt-32 pb-12">
-        <!-- Hero Section -->
-        <section class="container mx-auto px-4 mb-16">
-            <h1 class="text-4xl font-bold text-center text-gray-900 dark:text-white mb-6" data-i18n="about-hero-title">
-                Biz haqimizda</h1>
-            <p class="text-lg text-center text-gray-600 dark:text-gray-300 max-w-2xl mx-auto"
-                data-i18n="about-hero-desc">
-                Quva politexnikumi O‘zbekistonning yetakchi o‘quv yurtlaridan biri bo‘lib, kelajak mutaxassislarini
-                tayyorlashda o‘zining munosib o‘rniga ega.
-            </p>
-        </section>
+    active_cls = "text-blue-400 font-bold transition-colors duration-300"
+    inactive_cls = "text-white hover:text-blue-300 transition-colors duration-300"
+    active_mob = "block text-blue-400 font-bold transition-colors duration-300"
+    inactive_mob = "block text-white hover:text-blue-300 transition-colors duration-300"
 
-        <!-- History & Mission -->
-        <section class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">
-            <div class="bg-blue-50 dark:bg-gray-800 p-8 rounded-lg shadow-sm">
-                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4" data-i18n="about-history-title">
-                    Tariximiz</h2>
-                <p class="text-gray-700 dark:text-gray-300 leading-relaxed" data-i18n="about-history-text">
-                    Bizning o'quv yurtimiz 2005 yilda tashkil topgan bo'lib, o'tgan davr mobaynida minglab yuqori
-                    malakali mutaxassislarni tayyorlab berdi. Bugungi kunda kollejimiz zamonaviy moddiy-texnik bzaga
-                    ega.
-                </p>
-            </div>
-            <div class="bg-blue-50 dark:bg-gray-800 p-8 rounded-lg shadow-sm">
-                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4" data-i18n="about-mission-title">
-                    Missiyamiz</h2>
-                <p class="text-gray-700 dark:text-gray-300 leading-relaxed" data-i18n="about-mission-text">
-                    Bizning asosiy maqsadimiz — yoshlarga sifatli ta'lim berish, ularni zamonaviy kasb-hunarlarga
-                    o'rgatish va jamiyatimiz rivojiga hissa qo'shadigan yetuk kadrlar qilib tarbiyalashdir.
-                </p>
-            </div>
-        </section>
+    specific_header = template
+    for key in ['HOME', 'SOHALAR', 'ABOUT', 'STUDENTS', 'NEWS', 'CONTACT']:
+        d_class = active_cls if key == page_key else inactive_cls
+        m_class = active_mob if key == page_key else inactive_mob
+        specific_header = specific_header.replace(f"__CLASS_{key}__", d_class)
+        specific_header = specific_header.replace(f"__CLASS_{key}_MOBILE__", m_class)
+    
+    return specific_header
 
-        <!-- Leadership/Team -->
-        <section class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center text-gray-900 dark:text-white mb-12" data-i18n="about-team-title">
-                Rahbariyat</h2>
-            <div id="team-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-                <!-- Team Member 1 -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden text-center group">
-                    <img src="https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM=" alt="Team Member"
-                        class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300">
-                    <div class="p-6">
-                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-1" data-i18n="team-member-1">
-                            Abdullayev A.</h3>
-                        <p class="text-blue-600 dark:text-blue-400 font-medium" data-i18n="team-role-1">Direktor</p>
-                    </div>
-                </div>
-                <!-- Team Member 2 -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden text-center group">
-                    <img src="https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM=" alt="Team Member"
-                        class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300">
-                    <div class="p-6">
-                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-1" data-i18n="team-member-2">
-                            Karimov B.</h3>
-                        <p class="text-blue-600 dark:text-blue-400 font-medium" data-i18n="team-role-2">O'quv ishlari
-                            bo'yicha o'rinbosar</p>
-                    </div>
-                </div>
-                <!-- Team Member 3 -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden text-center group">
-                    <img src="https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM=" alt="Team Member"
-                        class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300">
-                    <div class="p-6">
-                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-1" data-i18n="team-member-3">
-                            Sobirova D.</h3>
-                        <p class="text-blue-600 dark:text-blue-400 font-medium" data-i18n="team-role-3">
-                            Ma'naviy-ma'rifiy ishlar bo'yicha</p>
-                    </div>
-                </div>
-                <!-- Team Member 4 -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden text-center group">
-                    <img src="https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM=" alt="Team Member"
-                        class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300">
-                    <div class="p-6">
-                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-1" data-i18n="team-member-4">
-                            Aliyev U.</h3>
-                        <p class="text-blue-600 dark:text-blue-400 font-medium" data-i18n="team-role-4">Yoshlar
-                            yetakchisi</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <footer class="bg-gray-900 text-white pt-16 pb-8 border-t border-gray-800">
+footer_template = """    <footer class="bg-gray-900 text-white pt-16 pb-8 border-t border-gray-800">
         <div class="container mx-auto px-4">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
                 <!-- Column 1: Brand & About -->
@@ -192,33 +112,17 @@
                         ko'nikmalar maskani.
                     </p>
                     <div class="flex space-x-4">
-                        <!-- Facebook -->
-                        <a id="social-facebook" href="#" target="_blank"
-                            class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-blue-800 transition-all duration-300 group">
-                            <svg class="w-5 h-5 text-gray-400 group-hover:text-white" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"></path>
-                            </svg>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-blue-600 transition-all duration-300 group">
+                            <svg class="w-5 h-5 text-gray-400 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
                         </a>
-                        <!-- Instagram -->
-                        <a id="social-instagram" href="#" target="_blank"
-                            class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-pink-600 transition-all duration-300 group">
-                            <svg class="w-5 h-5 text-gray-400 group-hover:text-white" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
-                                </path>
-                            </svg>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-pink-600 transition-all duration-300 group">
+                            <svg class="w-5 h-5 text-gray-400 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                         </a>
-                        <!-- Telegram -->
-                        <a id="social-telegram" href="#" target="_blank"
-                            class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-blue-500 transition-all duration-300 group">
-                            <svg class="w-5 h-5 text-gray-400 group-hover:text-white" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
-                            </svg>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-blue-800 transition-all duration-300 group">
+                            <svg class="w-5 h-5 text-gray-400 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"></path></svg>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-red-600 transition-all duration-300 group">
+                            <svg class="w-5 h-5 text-gray-400 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         </a>
                     </div>
                 </div>
@@ -256,13 +160,13 @@
                             <div class="w-10 h-10 rounded-lg bg-gray-800 flex-shrink-0 flex items-center justify-center mr-4 group-hover:bg-blue-600 transition-colors duration-300">
                                 <svg class="w-5 h-5 text-blue-500 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
                             </div>
-                            <span class="text-gray-400 text-sm font-medium" data-i18n="footer-phone">+998 73 123 45 67</span>
+                            <span class="text-gray-400 text-sm font-medium">+998 73 123 45 67</span>
                         </li>
                         <li class="flex items-center group">
                             <div class="w-10 h-10 rounded-lg bg-gray-800 flex-shrink-0 flex items-center justify-center mr-4 group-hover:bg-blue-600 transition-colors duration-300">
                                 <svg class="w-5 h-5 text-blue-500 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
                             </div>
-                            <span class="text-gray-400 text-sm font-medium" data-i18n="footer-email">info@quvapolitex.uz</span>
+                            <span class="text-gray-400 text-sm font-medium">info@quvapolitex.uz</span>
                         </li>
                     </ul>
                 </div>
@@ -281,9 +185,77 @@
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
         </svg>
-    </button>
-    <script src="script.js"></script>
-    <script src="dynamic-content.js"></script>
+    </button>"""
+
+scripts_template = """    <script src="script.js"></script>
+    <script src="dynamic-content.js"></script>"""
+
+page_map = {
+    'index.html': 'HOME',
+    'sohalar.html': 'SOHALAR',
+    'about.html': 'ABOUT',
+    'students.html': 'STUDENTS',
+    'news.html': 'NEWS',
+    'news-details.html': 'NEWS',
+    'field-details.html': 'SOHALAR',
+    'contact.html': 'CONTACT'
+}
+
+for file in html_files:
+    filepath = f"public/{file}"
+    if not os.path.exists(filepath):
+        continue
+        
+    with open(filepath, 'r', encoding='utf-8') as f:
+        content = f.read()
+    
+    # Extract Title
+    title_match = re.search(r'<title>(.*?)</title>', content, re.IGNORECASE)
+    title = title_match.group(1) if title_match else "Quva tumani Politexnikumi"
+    
+    # Extract Main Content
+    # We look for the FIRST <main> tag and its content until its CLOSING </main>
+    # Note: Regex for nested tags is hard, but usually <main> is not nested.
+    main_match = re.search(r'(<main.*?>.*?</main>)', content, re.DOTALL | re.IGNORECASE)
+    if not main_match:
+        print(f"Skipping {file}: no main tag found")
+        continue
+    main_content = main_match.group(1)
+    
+    # Page Key
+    page_key = page_map.get(file, 'HOME')
+    
+    # Rebuild
+    new_html = f"""<!DOCTYPE html>
+<html lang="uz" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{title}</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {{
+            darkMode: 'class',
+        }}
+    </script>
+    <script src="loader.js"></script>
+</head>
+
+<body class="bg-white dark:bg-gray-900 transition-colors duration-300">
+{get_header_template(page_key)}
+
+{main_content}
+
+{footer_template}
+{scripts_template}
 </body>
 
-</html>
+</html>"""
+
+    with open(filepath, 'w', encoding='utf-8') as f:
+        f.write(new_html)
+        
+    print(f"Sanitized {file}")
+

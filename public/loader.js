@@ -18,6 +18,9 @@ const UI = {
             setTimeout(() => this.hideLoader(), 500);
         });
 
+        // Safety timeout
+        setTimeout(() => this.hideLoader(), 2000);
+
         // Intercept navigation for loader
         this.interceptNavigation();
     },

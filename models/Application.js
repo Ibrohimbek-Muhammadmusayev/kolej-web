@@ -28,6 +28,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             allowNull: true
         },
+        message: {
+            type: DataTypes.TEXT,
+            allowNull: true
+        },
         status: {
             type: DataTypes.ENUM('new', 'contacted', 'archived'),
             defaultValue: 'new'

@@ -120,10 +120,15 @@ document.addEventListener('DOMContentLoaded', () => {
             'btn-all-fields': "Barcha sohalarni ko'rish",
             'achieve-title': "Yutuqlarimiz Raqamlarda",
             'stat-total': "Jami O'quvchilar",
-            'stat-soft-percent': "Dasturiy Injiniring",
-            'stat-net-percent': "Kompyuter Tarmoqlari",
-            'stat-account-percent': "Buxgalteriya va Moliya",
+            'stat-employment': "Bitiruvchilar Bandligi",
+            'stat-certs': "Xalqaro Sertifikatlar",
+            'stat-partners': "Hamkor Korxonalar",
             'stat-uni-percent': "OTMga Kirish Ko'rsatkichi",
+            'stat-total-desc': "Kollejimizda 1200 dan ortiq iqtidorli yoshlar tahsil olmoqda.",
+            'stat-employment-desc': "Bitiruvchilarimizning aksariyati o'z mutaxassisligi bo'yicha ishga joylashgan.",
+            'stat-certs-desc': "O'quvchilarimiz Cisco, Google va boshqa nufuzli kompaniyalar sertifikatlariga ega.",
+            'stat-partners-desc': "Amaliyot va ishga joylashtirish bo'yicha yetakchi tashkilotlar bilan hamkorlik.",
+            'stat-uni-desc': "Bitiruvchilarimizning aksariyati oliy ta'lim muassasalarida o'qishni davom ettirmoqda.",
             'students-title': "Bizning Faxrimiz - Aktiv O'quvchilar",
             'contact-title': "Biz Bilan Bog'laning",
             'contact-form-title': "Xabar Qoldiring",
@@ -243,10 +248,15 @@ document.addEventListener('DOMContentLoaded', () => {
             'btn-all-fields': "Посмотреть все направления",
             'achieve-title': "Наши достижения в цифрах",
             'stat-total': "Всего студентов",
-            'stat-soft-percent': "Программная инженерия",
-            'stat-net-percent': "Компьютерные сети",
-            'stat-account-percent': "Бухгалтерия и финансы",
+            'stat-employment': "Трудоустройство выпускников",
+            'stat-certs': "Международные сертификаты",
+            'stat-partners': "Партнерские организации",
             'stat-uni-percent': "Показатель поступления в ВУЗ",
+            'stat-total-desc': "В нашем колледже обучается более 1200 талантливых молодых людей.",
+            'stat-employment-desc': "Большинство наших выпускников трудоустроены по своей специальности.",
+            'stat-certs-desc': "Наши студенты имеют сертификаты Cisco, Google и других престижных компаний.",
+            'stat-partners-desc': "Сотрудничество с ведущими организациями по практике и трудоустройству.",
+            'stat-uni-desc': "Большинство наших выпускников продолжают обучение в высших учебных заведениях.",
             'students-title': "Наша гордость - Активные студенты",
             'contact-title': "Свяжитесь с нами",
             'contact-form-title': "Оставить сообщение",
@@ -366,10 +376,15 @@ document.addEventListener('DOMContentLoaded', () => {
             'btn-all-fields': "View All Fields",
             'achieve-title': "Our Achievements in Numbers",
             'stat-total': "Total Students",
-            'stat-soft-percent': "Software Engineering",
-            'stat-net-percent': "Computer Networks",
-            'stat-account-percent': "Accounting and Finance",
+            'stat-employment': "Graduate Employment",
+            'stat-certs': "International Certificates",
+            'stat-partners': "Partner Organizations",
             'stat-uni-percent': "University Admission Rate",
+            'stat-total-desc': "More than 1200 talented young people are studying at our college.",
+            'stat-employment-desc': "The majority of our graduates are employed in their specialty.",
+            'stat-certs-desc': "Our students hold certificates from Cisco, Google, and other prestigious companies.",
+            'stat-partners-desc': "Collaboration with leading organizations for internships and employment.",
+            'stat-uni-desc': "The majority of our graduates continue their studies in higher education institutions.",
             'students-title': "Our Pride - Active Students",
             'contact-title': "Contact Us",
             'contact-form-title': "Leave a Message",
@@ -596,12 +611,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     let current = 0;
 
                     const updateCounter = () => {
-                        current += increment;
-                        if (current < target) {
+                        const liveTarget = +counter.getAttribute('data-target') || target;
+                        const liveIncrement = liveTarget / (duration / 16);
+                        
+                        current += liveIncrement;
+                        if (current < liveTarget) {
                             counter.textContent = Math.ceil(current);
                             requestAnimationFrame(updateCounter);
                         } else {
-                            counter.textContent = target;
+                            counter.textContent = liveTarget;
                             counter.classList.add('finished');
                         }
                     };
@@ -624,7 +642,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    const statsObserver = new IntersectionObserver(runStatsAnimation, observerOptions);
+    const statsObserver = window.statsObserver = new IntersectionObserver(runStatsAnimation, observerOptions);
 
     // Robust Selector Strategy
     // Find all potential containers that have 'count-up' elements inside them

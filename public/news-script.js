@@ -156,7 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         newsList.forEach((item, index) => {
             const firstMedia = item.media && item.media.length > 0 ? item.media[0] : null;
-            const thumbSrc = firstMedia ? firstMedia.src : 'https://picsum.photos/400/300'; // Default placeholder
+            const thumbSrc = firstMedia ? firstMedia.src : 'https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM='; // Default placeholder
 
             const html = `
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden group hover:shadow-2xl transition-all duration-300 h-full flex flex-col">
@@ -190,7 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         relatedItems.forEach(rItem => {
             const firstMedia = rItem.media && rItem.media.length > 0 ? rItem.media[0] : null;
-            const thumbSrc = firstMedia ? firstMedia.src : 'https://picsum.photos/400/300';
+            const thumbSrc = firstMedia ? firstMedia.src : 'https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM=';
 
             const html = `
                 <a href="news-details.html?id=${rItem.id}" class="block bg-white dark:bg-gray-700 rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all group h-full flex flex-col">
