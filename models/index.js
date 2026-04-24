@@ -26,6 +26,7 @@ db.ActiveStudent = require('./ActiveStudent')(sequelize, Sequelize);
 db.Statistic = require('./Statistic')(sequelize, Sequelize);
 db.SiteSetting = require('./SiteSetting')(sequelize, Sequelize);
 db.HeroSlide = require('./HeroSlide')(sequelize, Sequelize);
+db.Schedule = require('./Schedule')(sequelize, Sequelize);
 
 // Associations
 // News <-> NewsMedia

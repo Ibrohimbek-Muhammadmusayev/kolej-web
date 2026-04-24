@@ -42,6 +42,10 @@ exports.createNews = async (req, res) => {
         const news = await db.News.create({ title, content, date });
 
         if (req.files && req.files.length > 0) {
+            // Update main image_url to the first file
+            const mainImageUrl = req.files[0].filename;
+            await news.update({ image_url: mainImageUrl });
+
             const mediaPromises = req.files.map(file => {
                 const type = file.mimetype.startsWith('video') ? 'video' : 'image';
                 const src = `/uploads/${file.filename}`;
@@ -73,6 +77,10 @@ exports.updateNews = async (req, res) => {
 
         // Handle new media upload if any (this simplistic approach just adds, usually you'd want to manage deletions too)
         if (req.files && req.files.length > 0) {
+            // Update main image_url to the first file
+            const mainImageUrl = req.files[0].filename;
+            await db.News.update({ image_url: mainImageUrl }, { where: { id: req.params.id } });
+
             const mediaPromises = req.files.map(file => {
                 const type = file.mimetype.startsWith('video') ? 'video' : 'image';
                 const src = `/uploads/${file.filename}`;

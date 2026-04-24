@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xotira Boshqaruvi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100">
+
+    <main class="fade-in">
+        <div class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800 tracking-tight">Xotira Boshqaruvi</h1>
+                <p class="text-gray-500 mt-1">Serverga yuklangan barcha media fayllarni tahlil qilish va tozalash</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <!-- Jami hajmi -->
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex items-center space-x-4">
+                <div class="w-14 h-14 rounded-full bg-blue-50 flex items-center justify-center text-blue-500">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path></svg>
+                </div>
+                <div>
+                    <p class="text-sm font-semibold text-gray-500 uppercase tracking-wider">Jami egallangan joy</p>
+                    <p class="text-2xl font-bold text-gray-800 mt-1" id="stat-total-size">0 MB</p>
+                </div>
+            </div>
+
+            <!-- Jami fayllar -->
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex items-center space-x-4">
+                <div class="w-14 h-14 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-500">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                </div>
+                <div>
+                    <p class="text-sm font-semibold text-gray-500 uppercase tracking-wider">Jami Fayllar Soni</p>
+                    <p class="text-2xl font-bold text-gray-800 mt-1" id="stat-total-files">0 ta</p>
+                </div>
+            </div>
+
+            <!-- Ortiqcha hajmi -->
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-red-100 flex items-center space-x-4">
+                <div class="w-14 h-14 rounded-full bg-red-50 flex items-center justify-center text-red-500">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                </div>
+                <div>
+                    <p class="text-sm font-semibold text-gray-500 uppercase tracking-wider">Ortiqcha fayllar</p>
+                    <div class="flex items-end space-x-2 mt-1">
+                        <p class="text-2xl font-bold text-red-600 leading-none" id="stat-orphan-size">0 MB</p>
+                        <p class="text-sm font-medium text-red-400 mb-0.5" id="stat-orphan-count">(0 ta)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 mb-8">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-6">
+                <div class="max-w-2xl">
+                    <h2 class="text-xl font-bold text-gray-800 mb-2">Ortiqcha fayllarni tozalash</h2>
+                    <p class="text-gray-500 text-sm leading-relaxed">
+                        Saytga yuklangan, lekin ma'lumotlar bazasida ishlatilmayotgan fayllar ro'yxati. Ularni barchasini birdaniga yoki tanlab o'chirishingiz mumkin.
+                    </p>
+                </div>
+                
+                <div class="flex-shrink-0 flex items-center gap-3">
+                    <button id="btn-clean-selected" onclick="cleanSelectedFiles()" disabled class="bg-gray-100 text-gray-400 cursor-not-allowed px-5 py-2.5 rounded-xl font-bold flex items-center space-x-2 transition-all">
+                        <span id="clean-selected-text">Tanlanganlarni o'chirish (0)</span>
+                    </button>
+                    <button id="btn-clean" onclick="cleanStorage()" disabled class="bg-red-50 text-red-400 cursor-not-allowed px-6 py-2.5 rounded-xl font-bold flex items-center space-x-2 transition-all">
+                        <svg class="w-5 h-5 animate-spin hidden" id="clean-spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <span id="clean-btn-text">Yuklanmoqda...</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="overflow-x-auto border border-gray-100 rounded-xl">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-50 border-b border-gray-100">
+                            <th class="p-4 w-12 text-center">
+                                <input type="checkbox" id="selectAll" class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 cursor-pointer" onclick="toggleSelectAll()">
+                            </th>
+                            <th class="p-4 text-sm font-semibold text-gray-600">Fayl</th>
+                            <th class="p-4 text-sm font-semibold text-gray-600">Turi</th>
+                            <th class="p-4 text-sm font-semibold text-gray-600">Hajmi</th>
+                            <th class="p-4 text-sm font-semibold text-gray-600 text-right">Amal</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orphan-files-list" class="divide-y divide-gray-100">
+                        <tr>
+                            <td colspan="5" class="p-8 text-center text-gray-500">
+                                Yuklanmoqda...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Image Modal -->
+    <div id="image-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+        <div class="bg-white dark:bg-gray-900 p-2 rounded-2xl shadow-2xl max-w-4xl w-full relative transform scale-95 transition-transform duration-300" id="modal-content">
+            <button onclick="closeModal()" class="absolute -top-4 -right-4 bg-red-500 hover:bg-red-600 text-white w-10 h-10 rounded-full flex items-center justify-center shadow-lg transition-colors z-10">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <div id="modal-media-container" class="rounded-xl overflow-hidden flex items-center justify-center min-h-[300px] max-h-[80vh] bg-gray-100 dark:bg-gray-800">
+                <!-- Media will be injected here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="js/admin.js"></script>
+    <script src="js/storage.js"></script>
+</body>
+
+</html>

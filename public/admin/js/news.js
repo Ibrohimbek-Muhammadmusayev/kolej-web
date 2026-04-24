@@ -32,7 +32,7 @@ async function loadNews() {
                 <td class="p-5 text-center font-medium text-gray-500">${index + 1}</td>
                 <td class="p-5 text-center">
                     <div class="w-16 h-12 rounded-lg bg-gray-100 mx-auto overflow-hidden shadow-sm border border-gray-200">
-                        ${item.image ? `<img src="../${item.image}" class="w-full h-full object-cover">` : '<div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">Rasm yo\'q</div>'}
+                        ${item.image_url ? `<img src="/uploads/${item.image_url}" class="w-full h-full object-cover">` : '<div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">Rasm yo\'q</div>'}
                     </div>
                 </td>
                 <td class="p-5 font-medium text-gray-800">${item.title_uz}</td>

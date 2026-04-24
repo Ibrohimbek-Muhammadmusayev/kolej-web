@@ -9,6 +9,8 @@ const settingsController = require('../controllers/settingsController');
 const teamController = require('../controllers/teamController');
 const studentController = require('../controllers/studentController');
 const statsController = require('../controllers/statsController');
+const scheduleController = require('../controllers/scheduleController');
+const storageController = require('../controllers/storageController');
 const authMiddleware = require('../middleware/auth');
 
 // Multer config for file uploads
@@ -80,5 +82,15 @@ router.get('/hero', heroController.getAllSlides);
 router.post('/hero', authMiddleware, upload.fields([{ name: 'media', maxCount: 1 }]), heroController.createSlide);
 router.put('/hero/:id', authMiddleware, upload.fields([{ name: 'media', maxCount: 1 }]), heroController.updateSlide);
 router.delete('/hero/:id', authMiddleware, heroController.deleteSlide);
+
+// --- SCHEDULES ---
+router.get('/schedules', scheduleController.getAllSchedules);
+router.post('/schedules', authMiddleware, upload.single('file'), scheduleController.createSchedule);
+router.put('/schedules/:id', authMiddleware, upload.single('file'), scheduleController.updateSchedule);
+router.delete('/schedules/:id', authMiddleware, scheduleController.deleteSchedule);
+
+// --- STORAGE ---
+router.get('/storage/stats', authMiddleware, storageController.getStorageStats);
+router.delete('/storage/clean', authMiddleware, storageController.cleanOrphanedFiles);
 
 module.exports = router;

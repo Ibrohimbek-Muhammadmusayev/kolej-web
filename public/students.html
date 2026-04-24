@@ -101,52 +101,16 @@
             </p>
         </section>
 
-        <!-- 1-Kurslar -->
-        <section class="container mx-auto px-4 mb-16">
-            <div class="flex items-center justify-between mb-8 border-b-2 border-blue-500 pb-2">
-                <h2 class="text-3xl font-bold text-gray-900 dark:text-white">1-Kurslar Dars Jadvali</h2>
-                <span class="bg-blue-600 text-white text-sm font-bold px-3 py-1 rounded-full">Yangi</span>
+        <!-- Dynamic Schedules Container -->
+        <div id="schedules-container" class="container mx-auto px-4">
+            <div class="text-center py-16 text-gray-400">
+                <svg class="w-10 h-10 mx-auto mb-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                </svg>
+                Yuklanmoqda...
             </div>
-            
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden group hover:shadow-xl transition-all duration-300">
-                    <div class="h-[400px] relative overflow-hidden bg-gray-50 dark:bg-gray-700 flex items-center justify-center p-4">
-                        <img src="images/schedule-placeholder.png" onerror="this.src='https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM='" alt="1-Kurs Dars Jadvali" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500 rounded-lg shadow-sm">
-                    </div>
-                    <div class="p-6 md:p-8 text-center bg-white dark:bg-gray-800">
-                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Barcha 1-kurs yo'nalishlari</h3>
-                        <p class="text-gray-600 dark:text-gray-400 mb-6">2024-2025 o'quv yili uchun tasdiqlangan dars jadvali</p>
-                        <a href="images/schedule-placeholder.png" target="_blank" class="inline-flex items-center px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-full shadow-lg hover:shadow-blue-500/50 transition-all duration-300">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                            Kattalashtirish / Yuklab olish
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 2-Kurslar -->
-        <section class="container mx-auto px-4 mb-8">
-            <div class="flex items-center justify-between mb-8 border-b-2 border-blue-500 pb-2">
-                <h2 class="text-3xl font-bold text-gray-900 dark:text-white">2-Kurslar Dars Jadvali</h2>
-            </div>
-            
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden group hover:shadow-xl transition-all duration-300">
-                    <div class="h-[400px] relative overflow-hidden bg-gray-50 dark:bg-gray-700 flex items-center justify-center p-4">
-                        <img src="images/schedule-placeholder-2.png" onerror="this.src='https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM='" alt="2-Kurs Dars Jadvali" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500 rounded-lg shadow-sm">
-                    </div>
-                    <div class="p-6 md:p-8 text-center bg-white dark:bg-gray-800">
-                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Barcha 2-kurs yo'nalishlari</h3>
-                        <p class="text-gray-600 dark:text-gray-400 mb-6">2024-2025 o'quv yili uchun tasdiqlangan dars jadvali</p>
-                        <a href="images/schedule-placeholder-2.png" target="_blank" class="inline-flex items-center px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-full shadow-lg hover:shadow-blue-500/50 transition-all duration-300">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                            Kattalashtirish / Yuklab olish
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </section>
+        </div>
     </main>
 
     <footer class="bg-gray-900 text-white pt-16 pb-8 border-t border-gray-800">

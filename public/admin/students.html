@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Faol O'quvchilar Boshqaruvi</title>
+    <title>O'quvchilar uchun - Boshqaruv</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
@@ -13,13 +13,13 @@
     <main class="fade-in">
         <div class="flex justify-between items-center mb-8">
             <div>
-                <h1 class="text-3xl font-bold text-gray-800 tracking-tight">Faol O'quvchilar</h1>
-                <p class="text-gray-500 mt-1">Kollejdagi faol va iqtidorli o'quvchilarni boshqarish</p>
+                <h1 class="text-3xl font-bold text-gray-800 tracking-tight">O'quvchilar uchun</h1>
+                <p class="text-gray-500 mt-1">Dars jadvallari va o'quv materiallarini boshqarish</p>
             </div>
             <button onclick="openModal()"
                 class="bg-blue-600 text-white px-5 py-2.5 rounded-xl hover:bg-blue-700 font-bold shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 flex items-center space-x-2">
                 <span class="text-xl">+</span>
-                <span>Yangi Qo'shish</span>
+                <span>Yangi Jadval Qo'shish</span>
             </button>
         </div>
 
@@ -31,14 +31,14 @@
                         <tr
                             class="bg-gray-50/50 border-b border-gray-100 text-xs uppercase tracking-wider text-gray-500 font-semibold">
                             <th class="p-5 w-16 text-center">ID</th>
-                            <th class="p-5 w-24">Rasm</th>
-                            <th class="p-5">F.I.SH (UZ)</th>
-                            <th class="p-5">Yo'nalish (UZ)</th>
-                            <th class="p-5 w-20 text-center">Tartib</th>
+                            <th class="p-5 w-24 text-center">Rasm</th>
+                            <th class="p-5">Kurs / Sarlavha</th>
+                            <th class="p-5 w-32 text-center">Tartib</th>
+                            <th class="p-5 w-32 text-center">Holat</th>
                             <th class="p-5 text-right w-32">Amallar</th>
                         </tr>
                     </thead>
-                    <tbody id="students-table-body" class="divide-y divide-gray-50 text-sm text-gray-700">
+                    <tbody id="schedules-table-body" class="divide-y divide-gray-50 text-sm text-gray-700">
                         <!-- Rows injected by JS -->
                     </tbody>
                 </table>
@@ -53,8 +53,8 @@
             id="modal-content">
             <div class="px-8 py-5 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
                 <div>
-                    <h2 id="modal-title" class="text-2xl font-bold text-gray-800">Faol O'quvchi qo'shish</h2>
-                    <p class="text-sm text-gray-500 mt-1">Ma'lumotlarni tillar kesimida kiriting</p>
+                    <h2 id="modal-title" class="text-2xl font-bold text-gray-800">Jadval qo'shish</h2>
+                    <p class="text-sm text-gray-500 mt-1">Jadval tafsilotlarini kiritib saqlang</p>
                 </div>
                 <button onclick="closeModal()"
                     class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300 text-gray-600 transition-colors">
@@ -63,8 +63,8 @@
             </div>
 
             <div class="p-8 overflow-y-auto flex-1">
-                <form id="student-form" class="space-y-6">
-                    <input type="hidden" id="student-id">
+                <form id="schedule-form" class="space-y-6">
+                    <input type="hidden" id="schedule-id">
 
                     <!-- Language Tabs -->
                     <div class="flex p-1 bg-gray-100 rounded-xl mb-6">
@@ -79,74 +79,67 @@
                     <!-- UZ Fields -->
                     <div id="tab-uz" class="space-y-5">
                         <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-1.5">F.I.SH (UZ)</label>
-                            <input type="text" id="full_name_uz"
+                            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Sarlavha (UZ)</label>
+                            <input type="text" id="title_uz"
                                 class="w-full px-4 py-3 rounded-xl bg-gray-50 border-transparent focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 transition-all font-medium"
                                 required>
                         </div>
                         <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Yo'nalish (UZ)</label>
-                            <input type="text" id="field_uz"
-                                class="w-full px-4 py-3 rounded-xl bg-gray-50 border-transparent focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 transition-all"
-                                required>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Yutug'i (UZ)</label>
-                            <textarea id="achievement_uz"
-                                class="w-full px-4 py-3 rounded-xl bg-gray-50 border-transparent focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 transition-all h-24 resize-none leading-relaxed"></textarea>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Tavsif (UZ)</label>
+                            <textarea id="description_uz"
+                                class="w-full px-4 py-3 rounded-xl bg-gray-50 border-transparent focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 transition-all font-medium h-24 resize-none"></textarea>
                         </div>
                     </div>
 
                     <!-- RU Fields -->
                     <div id="tab-ru" class="space-y-5 hidden">
                         <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-1.5">F.I.SH (RU)</label>
-                            <input type="text" id="full_name_ru"
+                            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Sarlavha (RU)</label>
+                            <input type="text" id="title_ru"
                                 class="w-full px-4 py-3 rounded-xl bg-gray-50 border-transparent focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 transition-all font-medium">
                         </div>
                         <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Yo'nalish (RU)</label>
-                            <input type="text" id="field_ru"
-                                class="w-full px-4 py-3 rounded-xl bg-gray-50 border-transparent focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 transition-all">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Yutug'i (RU)</label>
-                            <textarea id="achievement_ru"
-                                class="w-full px-4 py-3 rounded-xl bg-gray-50 border-transparent focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 transition-all h-24 resize-none leading-relaxed"></textarea>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Tavsif (RU)</label>
+                            <textarea id="description_ru"
+                                class="w-full px-4 py-3 rounded-xl bg-gray-50 border-transparent focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 transition-all font-medium h-24 resize-none"></textarea>
                         </div>
                     </div>
 
                     <!-- EN Fields -->
                     <div id="tab-en" class="space-y-5 hidden">
                         <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-1.5">F.I.SH (EN)</label>
-                            <input type="text" id="full_name_en"
+                            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Sarlavha (EN)</label>
+                            <input type="text" id="title_en"
                                 class="w-full px-4 py-3 rounded-xl bg-gray-50 border-transparent focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 transition-all font-medium">
                         </div>
                         <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Yo'nalish (EN)</label>
-                            <input type="text" id="field_en"
-                                class="w-full px-4 py-3 rounded-xl bg-gray-50 border-transparent focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 transition-all">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Yutug'i (EN)</label>
-                            <textarea id="achievement_en"
-                                class="w-full px-4 py-3 rounded-xl bg-gray-50 border-transparent focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 transition-all h-24 resize-none leading-relaxed"></textarea>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Tavsif (EN)</label>
+                            <textarea id="description_en"
+                                class="w-full px-4 py-3 rounded-xl bg-gray-50 border-transparent focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 transition-all font-medium h-24 resize-none"></textarea>
                         </div>
                     </div>
 
-                    <!-- Shared Fields -->
+                    <!-- Config -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-gray-100">
                         <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Rasm</label>
-                            <input type="file" id="image"
-                                class="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition-all">
+                            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Kurs (Masalan: 1-Kurslar)</label>
+                            <input type="text" id="course"
+                                class="w-full px-4 py-3 rounded-xl bg-gray-50 border-transparent focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 transition-all font-medium"
+                                placeholder="1-Kurslar" required>
                         </div>
                         <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Tartib Raqami</label>
-                            <input type="number" id="order"
-                                class="w-full px-4 py-3 rounded-xl bg-gray-50 border-transparent focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 transition-all"
-                                value="0">
+                            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Tartib raqami</label>
+                            <input type="number" id="order" value="0"
+                                class="w-full px-4 py-3 rounded-xl bg-gray-50 border-transparent focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 transition-all font-medium">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Jadval rasmi</label>
+                            <input type="file" id="schedule-file"
+                                class="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition-all">
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <input type="checkbox" id="isActive" checked class="w-5 h-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500">
+                            <label for="isActive" class="text-sm font-semibold text-gray-700">Sahifada ko'rsatish</label>
                         </div>
                     </div>
                 </form>
@@ -156,7 +149,7 @@
                 <button type="button" onclick="closeModal()"
                     class="px-6 py-2.5 rounded-xl text-gray-600 font-bold hover:bg-gray-200 transition-colors">Bekor
                     qilish</button>
-                <button type="button" onclick="document.getElementById('student-form').requestSubmit()"
+                <button type="button" onclick="saveSchedule()"
                     class="bg-blue-600 text-white px-8 py-2.5 rounded-xl font-bold hover:bg-blue-700 shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5">Saqlash</button>
             </div>
         </div>

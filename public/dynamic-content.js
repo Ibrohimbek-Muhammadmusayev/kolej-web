@@ -26,10 +26,14 @@ class CMS {
                 await this.loadFieldsPage();
             } else if (path.includes('field-details')) {
                 await this.loadFieldDetails();
+            } else if (path.includes('news-details')) {
+                await this.loadNewsDetails();
             } else if (path.includes('news')) {
                 await this.loadNewsPage();
             } else if (path.includes('about')) {
                 await this.loadAboutPage();
+            } else if (path.includes('students')) {
+                await this.loadStudentsPage();
             } else if (path.includes('contact')) {
                 await this.loadContactPage();
             }
@@ -725,6 +729,98 @@ class CMS {
         }
     }
 
+    async loadNewsDetails() {
+        const container = document.getElementById('news-detail-container');
+        if (!container) return;
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get('id');
+        if (!id) return;
+
+        try {
+            const item = await this.safeFetch(`${API_URL}/news/${id}`);
+            
+            // Media logic (Carousel)
+            let mediaHtml = '';
+            if (item.media && item.media.length > 0) {
+                const slidesHtml = item.media.map((m, index) => {
+                    const src = m.src.startsWith('http') ? m.src : m.src;
+                    let content = '';
+                    if (m.type === 'video') {
+                        content = `<video controls class="w-full h-full object-contain max-h-[500px]"><source src="${src}" type="video/mp4"></video>`;
+                    } else {
+                        content = `<img src="${src}" alt="${this.get(item, 'title')}" class="w-full h-full object-cover">`;
+                    }
+                    return `<div class="news-slide absolute inset-0 transition-opacity duration-500 ${index === 0 ? 'opacity-100' : 'opacity-0'}" data-index="${index}">${content}</div>`;
+                }).join('');
+
+                const controls = item.media.length > 1 ? `
+                    <button class="news-prev absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 text-white p-2 rounded-full z-10"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg></button>
+                    <button class="news-next absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 text-white p-2 rounded-full z-10"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></button>
+                ` : '';
+
+                mediaHtml = `<div class="relative h-64 md:h-[500px] bg-black overflow-hidden rounded-t-lg group">${slidesHtml}${controls}</div>`;
+            }
+
+            container.innerHTML = `
+                ${mediaHtml}
+                <div class="p-8 md:p-12">
+                    <div class="max-w-4xl mx-auto">
+                        <div class="mb-6 flex items-center text-sm text-gray-500">
+                             <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2.5 py-0.5 rounded">${this.lang === 'uz' ? 'Yangiliklar' : 'Новости'}</span>
+                             <span class="mx-2">•</span>
+                             <span>${new Date(item.date).toLocaleDateString()}</span>
+                        </div>
+                        <h1 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-8 leading-tight">${this.get(item, 'title')}</h1>
+                        <div class="prose dark:prose-invert max-w-none text-gray-700 dark:text-gray-300 text-lg leading-relaxed">
+                            ${this.get(item, 'content')}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Simple carousel logic
+            if (item.media && item.media.length > 1) {
+                let current = 0;
+                const slides = container.querySelectorAll('.news-slide');
+                const update = (idx) => {
+                    slides.forEach((s, i) => {
+                        s.classList.toggle('opacity-100', i === idx);
+                        s.classList.toggle('opacity-0', i !== idx);
+                    });
+                    current = idx;
+                };
+                container.querySelector('.news-prev').onclick = () => update((current - 1 + slides.length) % slides.length);
+                container.querySelector('.news-next').onclick = () => update((current + 1) % slides.length);
+            }
+
+            // Render Related
+            if (item.related && item.related.length > 0) {
+                const relatedContainer = document.getElementById('related-news-container');
+                if (relatedContainer) {
+                    relatedContainer.innerHTML = item.related.map(r => `
+                        <a href="news-details.html?id=${r.id}" class="bg-white dark:bg-gray-700 rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-all group">
+                            <div class="h-48 overflow-hidden">
+                                <img src="${this.getImageUrl(r.image_url)}" alt="${this.get(r, 'title')}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            </div>
+                            <div class="p-4">
+                                <span class="text-xs text-blue-500 font-bold mb-1 block">${new Date(r.date).toLocaleDateString()}</span>
+                                <h4 class="font-bold text-gray-900 dark:text-white line-clamp-2">${this.get(r, 'title')}</h4>
+                            </div>
+                        </a>
+                    `).join('');
+                }
+            } else {
+                const relatedSection = document.querySelector('.mt-16');
+                if (relatedSection) relatedSection.classList.add('hidden');
+            }
+
+        } catch (e) {
+            console.error(e);
+            container.innerHTML = '<div class="p-20 text-center text-red-500 font-bold">Yangilik topilmadi</div>';
+        }
+    }
+
     async loadAboutPage() {
         const container = document.getElementById('team-container');
         if (!container) return;
@@ -752,6 +848,66 @@ class CMS {
         } catch (e) {
             container.innerHTML = '<div class="col-span-full text-center text-red-500">Ma\'lumotlarni yuklashda xatolik.</div>';
             UI.showToast("Jamoa ma'lumotlarini yuklashda xatolik", 'error');
+        }
+    }
+
+    async loadStudentsPage() {
+        const container = document.getElementById('schedules-container');
+        if (!container) return;
+
+        try {
+            const schedules = await this.safeFetch(`${API_URL}/schedules`);
+            const active = schedules.filter(s => s.isActive);
+
+            if (active.length === 0) {
+                container.innerHTML = '<div class="text-center text-gray-500 dark:text-gray-400 py-16 text-lg">Hozircha jadvallar yuklanmagan.</div>';
+                return;
+            }
+
+            // Group by course
+            const grouped = {};
+            active.forEach(s => {
+                const key = s.course || 'Boshqa';
+                if (!grouped[key]) grouped[key] = [];
+                grouped[key].push(s);
+            });
+
+            container.innerHTML = Object.entries(grouped).map(([course, items]) => `
+                <section class="mb-16">
+                    <div class="flex items-center justify-between mb-8 border-b-2 border-blue-500 pb-2">
+                        <h2 class="text-3xl font-bold text-gray-900 dark:text-white">${course} Dars Jadvali</h2>
+                    </div>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        ${items.map(item => {
+                            const imgSrc = item.image_url ? '/uploads/' + item.image_url : '';
+                            const title = this.get(item, 'title');
+                            const desc = this.get(item, 'description') || '';
+                            return `
+                            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden group hover:shadow-xl transition-all duration-300">
+                                <div class="h-[400px] relative overflow-hidden bg-gray-50 dark:bg-gray-700 flex items-center justify-center p-4">
+                                    ${imgSrc
+                                        ? `<img src="${imgSrc}" onerror="this.src='${NO_IMAGE_PLACEHOLDER}'" alt="${title}" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500 rounded-lg shadow-sm">`
+                                        : `<div class="text-gray-400 text-lg">Rasm yuklanmagan</div>`
+                                    }
+                                </div>
+                                <div class="p-6 md:p-8 text-center bg-white dark:bg-gray-800">
+                                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">${title}</h3>
+                                    ${desc ? `<p class="text-gray-600 dark:text-gray-400 mb-6">${desc}</p>` : ''}
+                                    ${imgSrc ? `
+                                    <a href="${imgSrc}" target="_blank" class="inline-flex items-center px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-full shadow-lg hover:shadow-blue-500/50 transition-all duration-300">
+                                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                                        Kattalashtirish / Yuklab olish
+                                    </a>` : ''}
+                                </div>
+                            </div>`;
+                        }).join('')}
+                    </div>
+                </section>
+            `).join('');
+
+        } catch (e) {
+            console.error(e);
+            container.innerHTML = '<div class="text-center text-red-500 py-10">Jadvallarni yuklashda xatolik.</div>';
         }
     }
 
