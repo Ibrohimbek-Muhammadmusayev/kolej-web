@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram Bot Boshqaruvi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100">
+
+    <main class="fade-in">
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 tracking-tight">Telegram Bot</h1>
+            <p class="text-gray-500 mt-1">Botni sozlash va ro'yxatdan o'tgan o'quvchilarni boshqarish</p>
+        </div>
+
+        <!-- Bot Settings Card -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 mb-8 relative overflow-hidden">
+            <div class="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 rounded-full bg-gradient-to-br from-blue-50 to-indigo-50/30 blur-3xl -z-10 pointer-events-none"></div>
+            
+            <div class="flex flex-col md:flex-row justify-between gap-6 mb-6">
+                <div class="max-w-xl">
+                    <h2 class="text-xl font-bold text-gray-800 mb-2">Bot Tokeni va Holati</h2>
+                    <p class="text-gray-500 text-sm">Bot ishlashi uchun @BotFather orqali olingan tokenni kiritib saqlang. Bot avtomatik ishga tushadi.</p>
+                </div>
+                
+                <div class="flex items-center space-x-3 bg-gray-50 px-4 py-2 rounded-xl border border-gray-100">
+                    <span class="text-sm font-semibold text-gray-600">Holati:</span>
+                    <div id="bot-status-indicator" class="flex items-center">
+                        <span class="relative flex h-3 w-3 mr-2">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-gray-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-3 w-3 bg-gray-500"></span>
+                        </span>
+                        <span id="bot-status-text" class="text-sm font-bold text-gray-600">Tekshirilmoqda...</span>
+                    </div>
+                </div>
+            </div>
+
+            <form id="bot-form" class="flex flex-col md:flex-row gap-4 items-end">
+                <div class="flex-1 space-y-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1.5">Telegram Bot Token</label>
+                        <div class="flex">
+                            <span class="inline-flex items-center px-4 rounded-l-xl border border-r-0 border-gray-200 bg-gray-50 text-gray-500">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+                            </span>
+                            <input type="text" id="bot_token" required class="flex-1 min-w-0 block w-full px-4 py-3 rounded-none rounded-r-xl bg-gray-50 border-transparent focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 transition-all font-medium" placeholder="123456789:ABCdefGHIjklMNOpqrSTUvwxYZ">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1.5">Manzil so'ralganda ko'rsatiladigan namuna</label>
+                        <input type="text" id="bot_address_example" class="w-full px-4 py-3 rounded-xl bg-gray-50 border-transparent focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 transition-all font-medium" placeholder="Masalan: Farg'ona viloyati, Quva tumani">
+                    </div>
+                </div>
+                <div class="flex-shrink-0">
+                    <button type="submit" id="btn-save-bot" class="bg-blue-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-blue-700 shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 whitespace-nowrap">
+                        Saqlash va Ishga tushirish
+                    </button>
+                </div>
+            </form>
+            <p id="bot-message" class="mt-4 text-emerald-600 font-bold hidden"></p>
+        </div>
+
+        <!-- Registrations Table -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+                <h2 class="text-xl font-bold text-gray-800">Ro'yxatdan O'tganlar</h2>
+                <button onclick="loadRegistrations()" class="text-blue-600 hover:text-blue-800 flex items-center space-x-1 font-medium transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    <span>Yangilash</span>
+                </button>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-50 text-gray-600 text-sm border-b border-gray-100">
+                            <th class="p-4 font-semibold">T/r</th>
+                            <th class="p-4 font-semibold">Ism Familiya / Username</th>
+                            <th class="p-4 font-semibold">Yosh</th>
+                            <th class="p-4 font-semibold">Telefon</th>
+                            <th class="p-4 font-semibold">Qiziqishi</th>
+                            <th class="p-4 font-semibold">Yashash / O'qish joyi</th>
+                            <th class="p-4 font-semibold">Sana</th>
+                            <th class="p-4 font-semibold text-right">Amal</th>
+                        </tr>
+                    </thead>
+                    <tbody id="registrations-tbody" class="divide-y divide-gray-100">
+                        <tr>
+                            <td colspan="7" class="p-8 text-center text-gray-500">
+                                Yuklanmoqda...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <script src="js/admin.js"></script>
+    <script src="js/bot.js"></script>
+</body>
+
+</html>

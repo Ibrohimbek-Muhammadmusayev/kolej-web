@@ -2,7 +2,9 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const { sequelize } = require('./models'); // Will be created later
+const { sequelize } = require('./models');
+const db = require('./models');
+const botManager = require('./bot/index');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -59,10 +61,20 @@ if (!fs.existsSync(uploadDir)) {
 // Start Server
 // Start Server
 
-sequelize.sync({ force: false }).then(() => {
+sequelize.sync({ alter: true }).then(() => {
     console.log('Database synced');
     app.listen(PORT, async () => {
         console.log(`Server running on http://localhost:${PORT}`);
+        
+        // Initialize Bot
+        try {
+            const tokenSetting = await db.SiteSetting.findOne({ where: { key: 'bot_token' } });
+            if (tokenSetting && tokenSetting.value) {
+                botManager.startBot(tokenSetting.value.trim());
+            }
+        } catch (e) {
+            console.error("Failed to initialize bot on startup", e);
+        }
     });
 }).catch(err => {
     console.error('Failed to sync database:', err);

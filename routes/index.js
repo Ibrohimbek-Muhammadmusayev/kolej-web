@@ -11,6 +11,7 @@ const studentController = require('../controllers/studentController');
 const statsController = require('../controllers/statsController');
 const scheduleController = require('../controllers/scheduleController');
 const storageController = require('../controllers/storageController');
+const botController = require('../controllers/botController');
 const authMiddleware = require('../middleware/auth');
 
 // Multer config for file uploads
@@ -92,5 +93,11 @@ router.delete('/schedules/:id', authMiddleware, scheduleController.deleteSchedul
 // --- STORAGE ---
 router.get('/storage/stats', authMiddleware, storageController.getStorageStats);
 router.delete('/storage/clean', authMiddleware, storageController.cleanOrphanedFiles);
+
+// --- BOT ---
+router.get('/bot/status', authMiddleware, botController.getBotStatus);
+router.post('/bot/token', authMiddleware, botController.updateBotToken);
+router.get('/bot/registrations', authMiddleware, botController.getRegistrations);
+router.delete('/bot/registrations/:id', authMiddleware, botController.deleteRegistration);
 
 module.exports = router;

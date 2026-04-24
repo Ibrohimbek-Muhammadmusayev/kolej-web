@@ -39,6 +39,23 @@ const admin = {
         }
     },
 
+    showGlobalSuccess: (message = "Muvaffaqiyatli bajarildi.") => {
+        // Try to find a success toast, else fallback to alert
+        const toast = document.getElementById('global-success-toast');
+        if (toast) {
+            const msgEl = document.getElementById('global-success-message');
+            if (msgEl) msgEl.textContent = message;
+            toast.classList.remove('hidden', 'opacity-0', 'translate-y-4');
+            toast.classList.add('opacity-100', 'translate-y-0');
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-4');
+                setTimeout(() => toast.classList.add('hidden'), 400);
+            }, 3000);
+        } else {
+            alert(message);
+        }
+    },
+
     closeGlobalError: () => {
         const modal = document.getElementById('global-error-modal');
         if (modal) {
@@ -255,6 +272,10 @@ const navHtml = `
             <a href="storage.html" class="sidebar-link flex items-center px-3 py-3 rounded-lg text-sm ${window.location.pathname.includes('storage') ? 'active' : ''}">
                 <svg class="w-5 h-5 mr-3 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path></svg>
                 Xotira Boshqaruvi
+            </a>
+            <a href="bot.html" class="sidebar-link flex items-center px-3 py-3 rounded-lg text-sm ${window.location.pathname.includes('bot') ? 'active' : ''}">
+                <svg class="w-5 h-5 mr-3 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                Telegram Bot
             </a>
         </nav>
 
