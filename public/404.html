@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Sahifa topilmadi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .astronaut {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300 min-h-screen flex items-center justify-center">
+
+    <div class="container mx-auto px-4 text-center">
+        <div class="max-w-2xl mx-auto">
+            <div class="mb-8 relative inline-block">
+                <span class="text-9xl font-extrabold text-gray-200 dark:text-gray-800 select-none">404</span>
+                <div class="absolute inset-0 flex items-center justify-center astronaut">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2040/2040520.png" alt="Astronaut"
+                        class="w-32 h-32 md:w-48 md:h-48 drop-shadow-2xl">
+                </div>
+            </div>
+
+            <h1 class="text-3xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+                Voy, sahifa topilmadi!
+            </h1>
+            <p class="text-lg text-gray-600 dark:text-gray-400 mb-8">
+                Siz qidirayotgan sahifa koinot qa'riga singib ketgan yoki ko'chirilgan bo'lishi mumkin. Keling, ortga
+                qaytamiz.
+            </p>
+
+            <div class="flex flex-col md:flex-row gap-4 justify-center">
+                <a href="/"
+                    class="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-full shadow-lg transition-all transform hover:-translate-y-1">
+                    Bosh sahifaga qaytish
+                </a>
+                <button onclick="history.back()"
+                    class="px-8 py-3 bg-white dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700 text-gray-700 hover:bg-gray-100 border border-gray-200 dark:border-gray-700 font-bold rounded-full shadow-lg transition-all transform hover:-translate-y-1">
+                    Ortga qaytish
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dark Mode Script (Simplified from index.html) -->
+    <script>
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+</body>
+
+</html>

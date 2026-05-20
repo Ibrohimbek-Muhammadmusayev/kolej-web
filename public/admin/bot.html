@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram Bot Boshqaruvi - Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-100">
+
+    <main class="p-8">
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 tracking-tight">Telegram Bot Boshqaruvi</h1>
+            <p class="text-gray-500 mt-1">Bildirishnomalar va avtomatlashtirish uchun bot sozlamalari</p>
+        </div>
+
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+            <!-- Bot Configuration -->
+            <div class="xl:col-span-1 space-y-6">
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+                    <h2 class="text-xl font-bold text-gray-800 mb-6 flex items-center">
+                        <i class="fas fa-cog mr-3 text-blue-500"></i> Bot Sozlamalari
+                    </h2>
+                    
+                    <div id="bot-status-indicator" class="mb-8 p-5 rounded-2xl flex items-center space-x-4 transition-all duration-300">
+                        <div id="status-icon" class="w-3.5 h-3.5 rounded-full"></div>
+                        <span id="status-text" class="font-bold text-sm uppercase tracking-widest">Tekshirilmoqda...</span>
+                    </div>
+
+                    <form id="bot-token-form" class="space-y-5">
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2 ml-1">Bot Token (BotFather dan)</label>
+                            <div class="relative group">
+                                <input type="password" id="bot-token" 
+                                    class="w-full pl-4 pr-12 py-3.5 rounded-xl bg-gray-50 border-2 border-transparent focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10 transition-all font-mono text-sm"
+                                    placeholder="123456789:ABCdef...">
+                                <button type="button" onclick="toggleTokenVisibility()" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                                    <i id="eye-icon" class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2 ml-1">Xush kelibsiz xabari (/start bosilganda)</label>
+                            <textarea id="bot-welcome-message" rows="3" required
+                                class="w-full px-4 py-3 rounded-xl bg-gray-50 border-2 border-transparent focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10 transition-all text-sm resize-none"
+                                placeholder="Botga start bosilganda yuboriladigan xabar matni..."></textarea>
+                        </div>
+                        <button type="submit" 
+                            class="w-full bg-blue-600 text-white font-bold py-4 rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-500/20 transition-all transform hover:-translate-y-0.5 active:scale-95">
+                            Saqlash va Botni Yoqish
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Broadcast Message -->
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+                    <h2 class="text-xl font-bold text-gray-800 mb-6 flex items-center">
+                        <i class="fas fa-paper-plane mr-3 text-indigo-500"></i> Barchaga Xabar Yuborish
+                    </h2>
+                    <form id="broadcast-form" class="space-y-5">
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2 ml-1">Xabar Matni</label>
+                            <textarea id="broadcast-message" rows="4" required
+                                class="w-full px-4 py-3 rounded-xl bg-gray-50 border-2 border-transparent focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 transition-all text-sm resize-none"
+                                placeholder="Bot a'zolariga yuboriladigan xabarni yozing..."></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2 ml-1">Rasm yoki Video (ixtiyoriy)</label>
+                            <div class="relative flex items-center justify-center border-2 border-dashed border-gray-200 rounded-xl p-4 hover:bg-gray-50 transition-colors">
+                                <input type="file" id="broadcast-media" accept="image/*,video/*" class="absolute inset-0 opacity-0 cursor-pointer" onchange="updateBroadcastFileLabel(this)">
+                                <div class="text-center text-gray-400 pointer-events-none">
+                                    <i class="fas fa-cloud-upload-alt text-2xl mb-1 text-gray-300"></i>
+                                    <p class="text-xs font-medium" id="broadcast-file-label">Fayl tanlash (Rasm yoki Video)</p>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" 
+                            class="w-full bg-indigo-600 text-white font-bold py-4 rounded-xl hover:bg-indigo-700 shadow-lg shadow-indigo-500/20 transition-all transform hover:-translate-y-0.5 active:scale-95 flex items-center justify-center space-x-2">
+                            <i class="fas fa-paper-plane"></i>
+                            <span>Xabarni Yuborish</span>
+                        </button>
+                    </form>
+                </div>
+
+                <div class="bg-blue-50 p-6 rounded-2xl border border-blue-100/50">
+                    <h3 class="text-blue-800 font-bold mb-3 flex items-center text-sm">
+                        <i class="fas fa-question-circle mr-2"></i> Qisqa yo'riqnoma:
+                    </h3>
+                    <ul class="text-xs text-blue-700/80 space-y-3 list-none">
+                        <li class="flex items-start"><span class="w-5 h-5 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-[10px] font-bold mr-2 flex-shrink-0">1</span> @BotFather orqali yangi bot yarating</li>
+                        <li class="flex items-start"><span class="w-5 h-5 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-[10px] font-bold mr-2 flex-shrink-0">2</span> Berilgan API Tokenni yuqoriga kiriting</li>
+                        <li class="flex items-start"><span class="w-5 h-5 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-[10px] font-bold mr-2 flex-shrink-0">3</span> Botga o'tib <b>/start</b> buyrug'ini bosing</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Registered Users -->
+            <div class="xl:col-span-2">
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="px-8 py-6 border-b border-gray-50 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-gray-50/30">
+                        <h2 class="text-xl font-bold text-gray-800 flex items-center">
+                            <i class="fas fa-users mr-3 text-indigo-500"></i> Ro'yxatdan o'tganlar
+                            <span id="user-count-badge" class="ml-3 px-2.5 py-0.5 bg-indigo-100 text-indigo-600 rounded-full text-xs font-bold">0</span>
+                        </h2>
+                        <div class="flex items-center gap-3">
+                            <div class="relative flex-1 md:flex-none">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">
+                                    <i class="fas fa-search text-xs"></i>
+                                </span>
+                                <input type="text" id="user-search" oninput="filterUsers()"
+                                    class="pl-9 pr-4 py-2.5 w-full md:w-64 rounded-xl border border-gray-200 bg-white text-xs focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all"
+                                    placeholder="Izlash (F.I.SH, Username, Chat ID)...">
+                            </div>
+                            <select id="user-status-filter" onchange="filterUsers()"
+                                class="px-3 py-2.5 rounded-xl border border-gray-200 bg-white text-xs text-gray-600 focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all">
+                                <option value="all">Barcha holatlar</option>
+                                <option value="active">Faol</option>
+                                <option value="inactive">Nofaol</option>
+                            </select>
+                            <button onclick="loadRegistrations()" class="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100 text-gray-500 hover:bg-blue-50 hover:text-blue-600 transition-all flex-shrink-0">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-gray-50/50 text-xs uppercase tracking-wider text-gray-500 font-semibold">
+                                    <th class="p-5">Foydalanuvchi</th>
+                                    <th class="p-5">Chat ID</th>
+                                    <th class="p-5 text-center">Holat</th>
+                                    <th class="p-5 text-right">Amallar</th>
+                                </tr>
+                            </thead>
+                            <tbody id="registrations-list" class="divide-y divide-gray-50">
+                                <!-- Data will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div id="loading-registrations" class="p-20 text-center text-gray-400">
+                        <div class="inline-block w-10 h-10 border-4 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin mb-4"></div>
+                        <p class="font-medium">Yuklanmoqda...</p>
+                    </div>
+                    
+                    <div id="empty-registrations" class="p-20 text-center hidden">
+                        <div class="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <i class="fas fa-user-slash text-gray-300 text-3xl"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-800 mb-1">Foydalanuvchilar yo'q</h3>
+                        <p class="text-gray-500 text-sm">Hozircha hech kim botdan ro'yxatdan o'tmagan.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/admin.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            checkBotStatus();
+            loadRegistrations();
+            document.getElementById('bot-token-form').addEventListener('submit', updateToken);
+            document.getElementById('broadcast-form').addEventListener('submit', handleSendBroadcast);
+            document.getElementById('single-message-form').addEventListener('submit', handleSendSingleMessage);
+        });
+
+        function toggleTokenVisibility() {
+            const input = document.getElementById('bot-token');
+            const icon = document.getElementById('eye-icon');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        async function checkBotStatus() {
+            const indicator = document.getElementById('bot-status-indicator');
+            const icon = document.getElementById('status-icon');
+            const text = document.getElementById('status-text');
+
+            try {
+                const res = await admin.fetch('/bot/status');
+                if (!res) return;
+                const status = await res.json();
+
+                if (status.token) {
+                    document.getElementById('bot-token').value = status.token;
+                }
+                if (status.welcomeMessage) {
+                    document.getElementById('bot-welcome-message').value = status.welcomeMessage;
+                }
+
+                if (status.isActive) {
+                    indicator.className = 'mb-8 p-5 rounded-2xl flex items-center space-x-4 bg-green-50 text-green-700 border border-green-100 shadow-sm shadow-green-500/5';
+                    icon.className = 'w-3.5 h-3.5 rounded-full bg-green-500 shadow-[0_0_12px_rgba(34,197,94,0.6)] animate-pulse';
+                    text.textContent = 'Bot Faol va Ishlamoqda';
+                } else {
+                    indicator.className = 'mb-8 p-5 rounded-2xl flex items-center space-x-4 bg-red-50 text-red-700 border border-red-100';
+                    icon.className = 'w-3.5 h-3.5 rounded-full bg-red-500';
+                    text.textContent = 'Bot To\'xtatilgan yoki Sozlanmagan';
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        let allRegistrations = [];
+
+        async function loadRegistrations() {
+            const loading = document.getElementById('loading-registrations');
+            const empty = document.getElementById('empty-registrations');
+            const badge = document.getElementById('user-count-badge');
+            const list = document.getElementById('registrations-list');
+
+            list.innerHTML = '';
+            loading.classList.remove('hidden');
+            empty.classList.add('hidden');
+
+            try {
+                const res = await admin.fetch('/bot/registrations');
+                if (!res) return;
+                const data = await res.json();
+
+                loading.classList.add('hidden');
+                allRegistrations = data || [];
+                badge.textContent = allRegistrations.length;
+
+                filterUsers();
+            } catch (e) {
+                console.error(e);
+                loading.innerHTML = '<div class="text-red-500 font-bold"><i class="fas fa-exclamation-circle mr-2"></i>Xatolik yuz berdi</div>';
+            }
+        }
+
+        function filterUsers() {
+            const search = document.getElementById('user-search').value.toLowerCase().trim();
+            const status = document.getElementById('user-status-filter').value;
+
+            let filtered = allRegistrations;
+            if (status !== 'all') {
+                filtered = filtered.filter(u => u.status === status);
+            }
+            if (search) {
+                filtered = filtered.filter(u => 
+                    (u.firstName && u.firstName.toLowerCase().includes(search)) || 
+                    (u.username && u.username.toLowerCase().includes(search)) ||
+                    (u.chatId && u.chatId.includes(search))
+                );
+            }
+
+            renderRegistrations(filtered);
+        }
+
+        function renderRegistrations(data) {
+            const list = document.getElementById('registrations-list');
+            const empty = document.getElementById('empty-registrations');
+
+            list.innerHTML = '';
+            if (!data || data.length === 0) {
+                empty.classList.remove('hidden');
+                return;
+            }
+            empty.classList.add('hidden');
+
+            list.innerHTML = data.map(reg => `
+                <tr class="hover:bg-gray-50/80 transition-colors group">
+                    <td class="p-5">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-sm mr-4 border border-indigo-100 flex-shrink-0">
+                                ${(reg.firstName || 'U')[0].toUpperCase()}
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="font-bold text-gray-800">${reg.firstName || 'Noma\'lum'}</span>
+                                <span class="text-xs text-gray-400 font-medium">@${reg.username || 'username_yoq'}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="p-5 font-mono text-xs text-gray-500 bg-gray-50/30">${reg.chatId}</td>
+                    <td class="p-5 text-center">
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest ${reg.status === 'active' ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-400'}">
+                            <span class="w-1.5 h-1.5 rounded-full ${reg.status === 'active' ? 'bg-green-500 animate-pulse' : 'bg-gray-400'} mr-2"></span>
+                            ${reg.status}
+                        </span>
+                    </td>
+                    <td class="p-5 text-right whitespace-nowrap">
+                        <button data-chat-id="${reg.chatId}" 
+                                data-first-name="${(reg.firstName || 'Noma\'lum').replace(/"/g, '&quot;')}" 
+                                data-username="${(reg.username || '').replace(/"/g, '&quot;')}"
+                                onclick="openSingleMessageModalFromBtn(this)"
+                            class="text-gray-400 hover:text-indigo-600 p-2 rounded-lg hover:bg-indigo-50 transition-all mr-1" title="Xabar yozish">
+                            <i class="fas fa-paper-plane text-xs"></i>
+                        </button>
+                        <button onclick="deleteRegistration(${reg.id})" class="text-gray-400 hover:text-red-500 p-2 rounded-lg hover:bg-red-50 transition-all" title="O'chirish">
+                            <i class="fas fa-trash-alt text-xs"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        async function updateToken(e) {
+            e.preventDefault();
+            const tokenInput = document.getElementById('bot-token');
+            const welcomeInput = document.getElementById('bot-welcome-message');
+            
+            const token = tokenInput.value.trim();
+            const welcomeMessage = welcomeInput.value.trim();
+
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+
+            try {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Saqlanmoqda...';
+
+                const res = await admin.fetch('/bot/token', {
+                    method: 'POST',
+                    body: JSON.stringify({ token, welcomeMessage })
+                });
+
+                if (res && res.ok) {
+                    admin.showGlobalSuccess("Bot sozlamalari muvaffaqiyatli saqlandi");
+                    checkBotStatus();
+                }
+            } catch (e) { 
+                console.error(e); 
+                admin.showGlobalError("Saqlashda xatolik");
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+            }
+        }
+
+        async function deleteRegistration(id) {
+            if (!confirm("Ushbu foydalanuvchini bot ro'yxatidan o'chirmoqchimisiz?")) return;
+            try {
+                const res = await admin.fetch(`/bot/registrations/${id}`, { method: 'DELETE' });
+                if (res && res.ok) {
+                    admin.showGlobalSuccess("Foydalanuvchi o'chirildi");
+                    loadRegistrations();
+                }
+            } catch (e) { console.error(e); }
+        }
+
+        function updateBroadcastFileLabel(input) {
+            const label = document.getElementById('broadcast-file-label');
+            if (input.files && input.files.length > 0) {
+                label.textContent = input.files[0].name;
+                label.classList.add('text-indigo-600', 'font-bold');
+            } else {
+                label.textContent = "Fayl tanlash (Rasm yoki Video)";
+                label.classList.remove('text-indigo-600', 'font-bold');
+            }
+        }
+
+        async function handleSendBroadcast(e) {
+            e.preventDefault();
+            const messageInput = document.getElementById('broadcast-message');
+            const mediaInput = document.getElementById('broadcast-media');
+            const message = messageInput.value.trim();
+            if (!message) return;
+
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalText = btn.innerHTML;
+
+            try {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Yuborilmoqda...';
+
+                const formData = new FormData();
+                formData.append('message', message);
+                if (mediaInput.files && mediaInput.files[0]) {
+                    formData.append('media', mediaInput.files[0]);
+                }
+
+                const res = await admin.fetch('/bot/send', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (res && res.ok) {
+                    admin.showGlobalSuccess("Xabar barcha faol a'zolarga muvaffaqiyatli yuborildi!");
+                    messageInput.value = '';
+                    mediaInput.value = '';
+                    updateBroadcastFileLabel(mediaInput);
+                } else {
+                    const data = await res.json();
+                    admin.showGlobalError(data.message || "Xabar yuborishda xatolik yuz berdi");
+                }
+            } catch (e) {
+                console.error(e);
+                admin.showGlobalError("Server bilan aloqada xatolik");
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            }
+        }
+
+        function updateModalFileLabel(input) {
+            const label = document.getElementById('modal-file-label');
+            if (input.files && input.files.length > 0) {
+                label.textContent = input.files[0].name;
+                label.classList.add('text-blue-600', 'font-bold');
+            } else {
+                label.textContent = "Fayl tanlash (Rasm yoki Video)";
+                label.classList.remove('text-blue-600', 'font-bold');
+            }
+        }
+
+        function openSingleMessageModalFromBtn(btn) {
+            const chatId = btn.dataset.chatId;
+            const firstName = btn.dataset.firstName;
+            const username = btn.dataset.username;
+            openSingleMessageModal(chatId, firstName, username);
+        }
+
+        function openSingleMessageModal(chatId, firstName, username) {
+            document.getElementById('modal-chat-id').value = chatId;
+            document.getElementById('modal-recipient-name').textContent = firstName;
+            document.getElementById('modal-recipient-username').textContent = username ? '@' + username : 'username yo\'q';
+            document.getElementById('modal-recipient-avatar').textContent = firstName[0].toUpperCase();
+            
+            document.getElementById('modal-message-text').value = '';
+            const fileInput = document.getElementById('modal-message-file');
+            fileInput.value = '';
+            updateModalFileLabel(fileInput);
+
+            const modal = document.getElementById('single-message-modal');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modal.querySelector('div').classList.remove('scale-95', 'opacity-0');
+                modal.querySelector('div').classList.add('scale-100', 'opacity-100');
+            }, 50);
+        }
+
+        function closeSingleMessageModal() {
+            const modal = document.getElementById('single-message-modal');
+            modal.classList.add('opacity-0');
+            modal.querySelector('div').classList.remove('scale-100', 'opacity-100');
+            modal.querySelector('div').classList.add('scale-95', 'opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        async function handleSendSingleMessage(e) {
+            e.preventDefault();
+            const chatId = document.getElementById('modal-chat-id').value;
+            const messageInput = document.getElementById('modal-message-text');
+            const mediaInput = document.getElementById('modal-message-file');
+            const message = messageInput.value.trim();
+            if (!message) return;
+
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalText = btn.innerHTML;
+
+            try {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Yuborilmoqda...';
+
+                const formData = new FormData();
+                formData.append('chatId', chatId);
+                formData.append('message', message);
+                if (mediaInput.files && mediaInput.files[0]) {
+                    formData.append('media', mediaInput.files[0]);
+                }
+
+                const res = await admin.fetch('/bot/send-single', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (res && res.ok) {
+                    admin.showGlobalSuccess("Xabar muvaffaqiyatli yuborildi!");
+                    closeSingleMessageModal();
+                } else {
+                    const data = await res.json();
+                    admin.showGlobalError(data.message || "Xabar yuborishda xatolik yuz berdi");
+                }
+            } catch (e) {
+                console.error(e);
+                admin.showGlobalError("Server bilan aloqada xatolik");
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            }
+        }
+    </script>
+
+    <!-- Send Single Message Modal -->
+    <div id="single-message-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-2xl shadow-xl border border-gray-100 max-w-lg w-full mx-4 overflow-hidden transform scale-95 transition-transform duration-300">
+            <div class="px-6 py-4 bg-gray-50 border-b border-gray-100 flex justify-between items-center">
+                <h3 class="font-bold text-gray-800 flex items-center">
+                    <i class="fas fa-paper-plane mr-2 text-blue-500"></i> Foydalanuvchiga xabar yozish
+                </h3>
+                <button onclick="closeSingleMessageModal()" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="single-message-form" class="p-6 space-y-4">
+                <input type="hidden" id="modal-chat-id">
+                <div>
+                    <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Kimga</label>
+                    <div id="modal-recipient-info" class="flex items-center space-x-3 p-3 bg-gray-50 rounded-xl border border-gray-100">
+                        <div id="modal-recipient-avatar" class="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-xs">U</div>
+                        <div>
+                            <p id="modal-recipient-name" class="font-bold text-gray-800 text-sm">User Name</p>
+                            <p id="modal-recipient-username" class="text-xs text-gray-400">@username</p>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Xabar matni</label>
+                    <textarea id="modal-message-text" rows="4" required
+                        class="w-full px-4 py-3 rounded-xl bg-gray-50 border-2 border-transparent focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10 transition-all text-sm resize-none"
+                        placeholder="Xabarni yozing..."></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Rasm yoki Video (ixtiyoriy)</label>
+                    <div class="relative flex items-center justify-center border-2 border-dashed border-gray-200 rounded-xl p-4 hover:bg-gray-50 transition-colors">
+                        <input type="file" id="modal-message-file" accept="image/*,video/*" class="absolute inset-0 opacity-0 cursor-pointer" onchange="updateModalFileLabel(this)">
+                        <div class="text-center text-gray-400 pointer-events-none">
+                            <i class="fas fa-cloud-upload-alt text-2xl mb-1 text-gray-300"></i>
+                            <p class="text-xs font-medium" id="modal-file-label">Fayl tanlash (Rasm yoki Video)</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex space-x-3 pt-2">
+                    <button type="button" onclick="closeSingleMessageModal()" class="flex-1 py-3 bg-gray-100 hover:bg-gray-200 text-gray-600 font-bold rounded-xl transition-all text-sm">Bekor qilish</button>
+                    <button type="submit" class="flex-1 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg shadow-blue-500/20 transition-all text-sm flex items-center justify-center space-x-2">
+                        <i class="fas fa-paper-plane"></i>
+                        <span>Yuborish</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

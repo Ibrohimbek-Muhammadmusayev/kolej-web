@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xotira Boshqaruvi - Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body class="bg-gray-100">
+
+    <main class="p-8">
+        <div class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800 tracking-tight">Xotira Boshqaruvi (Kesh)</h1>
+                <p class="text-gray-500 mt-1">Ishlatilmayotgan (orphaned) fayllarni tozalash va boshqarish</p>
+            </div>
+            <div class="flex space-x-3">
+                <button onclick="loadFiles()"
+                    class="bg-white text-gray-700 border border-gray-200 px-5 py-2.5 rounded-xl hover:bg-gray-50 font-bold shadow-sm transition-all flex items-center">
+                    <i class="fas fa-sync-alt mr-2 text-blue-500"></i> Yangilash
+                </button>
+                <button onclick="deleteAllOrphaned()" id="delete-all-btn"
+                    class="bg-red-600 text-white px-5 py-2.5 rounded-xl hover:bg-red-700 font-bold shadow-md hover:shadow-lg transition-all hidden flex items-center">
+                    <i class="fas fa-trash-alt mr-2"></i> Hammasini o'chirish
+                </button>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Jami fayllar</p>
+                <h3 id="total-file-count" class="text-2xl font-extrabold text-gray-800">0</h3>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Umumiy xotira</p>
+                <h3 id="total-disk-size" class="text-2xl font-extrabold text-gray-800">0 MB</h3>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-blue-100" style="background-color: rgba(239,246,255,0.3)">
+                <p class="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-1">Ishlab turganlar</p>
+                <h3 id="active-file-count" class="text-2xl font-extrabold text-blue-600">0</h3>
+                <p id="active-file-size" class="text-xs font-semibold text-blue-400 mt-1">0 MB</p>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-orange-100" style="background-color: rgba(255,247,237,0.3)">
+                <p class="text-[10px] font-bold text-orange-400 uppercase tracking-widest mb-1">Ortiqcha (Kesh)</p>
+                <h3 id="file-count" class="text-2xl font-extrabold text-orange-600">0</h3>
+                <p id="orphaned-file-size" class="text-xs font-semibold text-orange-400 mt-1">0 MB</p>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Holat</p>
+                <h3 id="storage-status" class="text-2xl font-extrabold text-green-600">Toza</h3>
+            </div>
+        </div>
+
+        <!-- Files List -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-50/50 border-b border-gray-100 text-xs uppercase tracking-wider text-gray-500 font-semibold">
+                            <th class="p-5">Fayl nomi va yo'li</th>
+                            <th class="p-5 w-32">Hajmi</th>
+                            <th class="p-5 w-40">Yaratilgan sana</th>
+                            <th class="p-5 text-right w-32">Amallar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="files-list" class="divide-y divide-gray-50 text-sm">
+                        <!-- Files will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="loading-spinner" class="p-20 text-center text-gray-400">
+                <div class="inline-block w-10 h-10 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin mb-4"></div>
+                <p class="font-medium">Fayllar tekshirilmoqda...</p>
+            </div>
+
+            <div id="empty-state" class="p-20 text-center hidden">
+                <div class="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-check-circle text-green-500 text-4xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-800 mb-2">Hamma narsa toza!</h3>
+                <p class="text-gray-500 max-w-xs mx-auto font-medium">Ortiqcha (ishlatilmayotgan) fayllar topilmadi.</p>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/admin.js"></script>
+    <script>
+        function formatBytes(bytes, decimals = 2) {
+            if (!bytes || bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const dm = decimals < 0 ? 0 : decimals;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+        }
+
+        function isImage(filename) {
+            return /\.(jpg|jpeg|png|gif|webp)$/i.test(filename);
+        }
+
+        function buildFileRow(file) {
+            const row = document.createElement('tr');
+            row.className = 'hover:bg-gray-50 transition-colors group';
+
+            // Preview cell
+            const tdFile = document.createElement('td');
+            tdFile.className = 'p-4';
+
+            const previewWrapper = document.createElement('div');
+            previewWrapper.className = 'flex items-center';
+
+            const previewBox = document.createElement('div');
+            previewBox.className = 'w-12 h-12 rounded-xl overflow-hidden bg-gray-100 mr-4 flex items-center justify-center shadow-sm border border-gray-100 group-hover:border-blue-200 transition-colors';
+
+            if (isImage(file.filename)) {
+                const img = document.createElement('img');
+                img.src = file.path;
+                img.className = 'w-full h-full object-cover';
+                img.onerror = function() { this.parentElement.innerHTML = '<i class="fas fa-image text-gray-400 text-xl"></i>'; };
+                previewBox.appendChild(img);
+            } else {
+                const icon = document.createElement('i');
+                icon.className = 'fas fa-file-video text-blue-500 text-xl';
+                previewBox.appendChild(icon);
+            }
+
+            const fileInfo = document.createElement('div');
+            fileInfo.className = 'flex flex-col';
+
+            const fname = document.createElement('span');
+            fname.className = 'font-bold text-gray-800 break-all';
+            fname.textContent = file.filename;
+
+            const fpath = document.createElement('span');
+            fpath.className = 'text-[10px] text-gray-400 font-mono mt-0.5';
+            fpath.textContent = file.path;
+
+            fileInfo.appendChild(fname);
+            fileInfo.appendChild(fpath);
+            previewWrapper.appendChild(previewBox);
+            previewWrapper.appendChild(fileInfo);
+            tdFile.appendChild(previewWrapper);
+
+            // Size cell
+            const tdSize = document.createElement('td');
+            tdSize.className = 'p-4 text-gray-600 font-medium';
+            tdSize.textContent = formatBytes(file.size);
+
+            // Date cell
+            const tdDate = document.createElement('td');
+            tdDate.className = 'p-4 text-gray-500 text-xs';
+            tdDate.textContent = new Date(file.createdAt).toLocaleString();
+
+            // Actions cell
+            const tdActions = document.createElement('td');
+            tdActions.className = 'p-4 text-right space-x-1';
+
+            const downloadBtn = document.createElement('a');
+            downloadBtn.href = file.path;
+            downloadBtn.download = file.filename;
+            downloadBtn.className = 'text-blue-500 hover:bg-blue-50 p-2.5 rounded-lg transition-colors inline-block';
+            downloadBtn.title = 'Yuklab olish';
+            downloadBtn.innerHTML = '<i class="fas fa-download"></i>';
+
+            const deleteBtn = document.createElement('button');
+            deleteBtn.className = 'text-red-500 hover:bg-red-50 p-2.5 rounded-lg transition-colors';
+            deleteBtn.title = "O'chirish";
+            deleteBtn.innerHTML = '<i class="fas fa-trash"></i>';
+            deleteBtn.addEventListener('click', () => deleteFile(file.filename));
+
+            tdActions.appendChild(downloadBtn);
+            tdActions.appendChild(deleteBtn);
+
+            row.appendChild(tdFile);
+            row.appendChild(tdSize);
+            row.appendChild(tdDate);
+            row.appendChild(tdActions);
+
+            return row;
+        }
+
+        async function loadFiles() {
+            const list = document.getElementById('files-list');
+            const spinner = document.getElementById('loading-spinner');
+            const emptyState = document.getElementById('empty-state');
+            const deleteAllBtn = document.getElementById('delete-all-btn');
+
+            list.innerHTML = '';
+            spinner.classList.remove('hidden');
+            emptyState.classList.add('hidden');
+            deleteAllBtn.classList.add('hidden');
+
+            try {
+                const response = await admin.fetch('/storage/orphaned');
+                if (!response) throw new Error("Fetch error");
+                const data = await response.json();
+
+                const files = data.orphaned || [];
+                const stats = data.stats || {};
+
+                spinner.classList.add('hidden');
+
+                // Update stats cards
+                document.getElementById('total-file-count').textContent = stats.totalFiles || 0;
+                document.getElementById('total-disk-size').textContent = formatBytes(stats.totalSize || 0);
+                document.getElementById('active-file-count').textContent = stats.activeCount || 0;
+                document.getElementById('active-file-size').textContent = formatBytes(stats.activeSize || 0);
+                document.getElementById('file-count').textContent = stats.orphanedCount || 0;
+                document.getElementById('orphaned-file-size').textContent = formatBytes(stats.orphanedSize || 0);
+
+                if (files.length === 0) {
+                    emptyState.classList.remove('hidden');
+                    document.getElementById('storage-status').textContent = 'Toza';
+                    document.getElementById('storage-status').className = 'text-2xl font-extrabold text-green-600';
+                    return;
+                }
+
+                deleteAllBtn.classList.remove('hidden');
+                document.getElementById('storage-status').textContent = 'Tozalash kerak';
+                document.getElementById('storage-status').className = 'text-2xl font-extrabold text-orange-600';
+
+                files.forEach(file => {
+                    list.appendChild(buildFileRow(file));
+                });
+
+            } catch (error) {
+                console.error('Failed to load orphaned files:', error);
+                spinner.innerHTML = '<div class="flex flex-col items-center"><i class="fas fa-exclamation-triangle text-red-500 text-2xl mb-2"></i><p class="text-red-500 font-bold">Xatolik yuz berdi!</p></div>';
+            }
+        }
+
+        async function deleteFile(filename) {
+            if (!confirm('Haqiqatan ham "' + filename + '" faylini o\'chirmoqchimisiz?')) return;
+
+            try {
+                const response = await admin.fetch('/storage/orphaned/' + encodeURIComponent(filename), {
+                    method: 'DELETE'
+                });
+                if (response && response.ok) {
+                    admin.showGlobalSuccess("Fayl o'chirildi");
+                    loadFiles();
+                }
+            } catch (error) {
+                admin.showGlobalError("O'chirishda xatolik yuz berdi");
+            }
+        }
+
+        async function deleteAllOrphaned() {
+            if (!confirm("Barcha ishlatilmayotgan fayllarni o'chirishga aminmisiz? Bu amalni ortga qaytarib bo'lmaydi.")) return;
+
+            try {
+                const response = await admin.fetch('/storage/orphaned', {
+                    method: 'DELETE'
+                });
+                if (response && response.ok) {
+                    admin.showGlobalSuccess("Barcha ortiqcha fayllar tozalandi");
+                    loadFiles();
+                }
+            } catch (error) {
+                admin.showGlobalError("Tozalashda xatolik yuz berdi");
+            }
+        }
+
+        // Direct call — by the time this inline script runs, admin.js is already loaded
+        loadFiles();
+    </script>
+</body>
+
+</html>
